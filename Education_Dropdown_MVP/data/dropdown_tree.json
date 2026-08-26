@@ -1,0 +1,68 @@
+{
+  "Client Approval": {
+    "Candidate Non-Cooperation": {
+      "Declined to share": "T1",
+      "Confirmed not available": "T2",
+      "Left organization": "T3",
+      "Will not join": "T4",
+      "Non-responsive": "T5",
+      "Verification blocked": "T6"
+    },
+    "Disclosure Consent": {
+      "N/A": "T49"
+    }
+  },
+  "Cost Approval": {
+    "N/A": {
+      "Additional Verification Cost - On Top of an Already-Approved Cost": "T7",
+      "Revised total verification cost": "T8",
+      "Verification cost for a specific country": "T50"
+    }
+  },
+  "Insufficiency": {
+    "Document": {
+      "Missing": "T9",
+      "Blurred": "T10",
+      "Blurred/Illegible - Scanned copy is blurred or unreadable": "T10",
+      "Blurred/Illegible - Specific defect (page, section, fading, cropping)": "T74",
+      "Incomplete": "T11",
+      "Incomplete - Document is incomplete or partially visible": "T11",
+      "Incomplete - Missing required company details or signature": "T53",
+      "Incomplete - Not in the approved or required format": "T66",
+      "Incomplete - Other specific defect (signature, page, photograph, letterhead)": "T73",
+      "Expired - Document has expired": "T12",
+      "Expired - states a validity period": "T68",
+      "Wrong": "T13",
+      "Wrong/Rejected - Document cannot be accepted": "T13",
+      "Wrong/Rejected - Institution's own record rejected the source document": "T63"
+    },
+    "Information": {
+      "Missing": "T51",
+      "Missing - Course / Qualification detail": "T14",
+      "Missing - Identifier Number": "T15",
+      "Missing - Institute's Address": "T65",
+      "Mismatch - Course / Qualification detail vs records": "T18",
+      "Mismatch - Value vs a verified record on file": "T59",
+      "Mismatch - Two sources disagree on the same field": "T70",
+      "Wrong / Invalid - Contact Details Unreachable or Invalid": "T44",
+      "Wrong / Invalid - Other Detail is Wrong or Invalid": "T72",
+      "Below Required Minimum": "T71"
+    },
+    "Action Required": {
+      "Portal Action": {
+        "course_vs": "T17",
+        "check_only": "T61"
+      },
+      "Visit/complete within deadline": "T42",
+      "Source action": "T62"
+    },
+    "Review Raised": {
+      "Review Raised": "T69"
+    }
+  },
+  "TAT Approval": {
+    "N/A": {
+      "TAT extension request": "T60"
+    }
+  }
+}

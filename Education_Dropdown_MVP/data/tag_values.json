@@ -1,0 +1,705 @@
+{
+  "DOCUMENTS": {
+    "type": "atomic_document_builder",
+    "note": "Curated, deduplicated, ATOMIC document list (one real document per entry - never a combined/comma-joined value). Combinations are built by the user via the Mandatory + Any-one-of document-builder UI, never pre-baked into this list. 'Other' always available as free text for genuinely new document names. Cleaned 2026-08-18 (candidate-empathy audit): 'Highest Passing Education Marksheet or Degree' had its own 'or' baked into the label, which is now redundant and confusing since the Any-one-of picker is a first-class UI mechanism - split into its own atomic 'Highest Passing Education Marksheet' entry ('Degree' already existed separately, pick both into Any-one-of to reproduce the same either/or); 'Both-side colour copy of University-issued Degree' merged into plain 'Degree' since the both-side/colour-copy detail is already expressible via the Special Instructions checkboxes, not part of the document's identity; 'Graduation or above education documents' relabeled to 'Graduation (or higher) Education Documents' for clarity (the 'or' here describes an education LEVEL, not a choice between two named documents, so it was not split). SECOND CLEANUP PASS (2026-08-21, owner: 'clean the values, I see duplicates - what if Ops guy selects both, that will create a clumsy comment'): removed 3 values that were the same real document as one already in the list, just worded differently, so an agent could tick both and produce a redundant sentence - 'Degree certificate' merged into 'Degree' (same document); 'Original copies of University-issued Final year marksheet' merged into 'Final year marksheet' (the 'original'/'university-issued' qualifier belongs in Special Instructions - see 'Original document, not a photocopy' and 'Sealed and signed by the institution' there - not in the document's identity); 'Letter of Authorization' merged into 'Authorization form' (same document, both real phrasings - 'Authorization form' kept since it's the shorter, more checkbox-friendly label). NOT merged, despite looking similar, because real-data frequency shows they're genuinely distinct, separately-used documents (checked via grep across all 8,284 real comments): 'HEDD consent form' (50 real mentions) vs plain 'Consent form' (136 real mentions, excluding HEDD) - both used independently at real volume, not one rare variant of the other. STILL FLAGGED, not yet merged (owner judgment call needed - see PROGRESS_LOG.md 2026-08-21 entry): 'Highest Passing Education Marksheet' (3 real mentions) / 'Highest completed education documents' (24) / 'Graduation or Higher Education Documents' (60) may be 3 overlapping phrasings of the same ask, or may be genuinely different asks by education-level granularity - real-data volume alone can't settle which. THIRD CLEANUP PASS (2026-08-21, owner: 'where are sem 1-8 and all semester marksheet options? you are missing some educational docs and added some unnecessary values'): grepped all 8,284 real comments for 'semester' - confirmed 11 real rows explicitly ask for a specific numbered semester's marksheet ('Require 1st Semester Marksheet' through '...8th Semester Marksheet') or 'All Semester Marksheet' as its own request, distinct from year-wise marksheets (semester-run programs, e.g. most B.Tech/B.E. courses, don't have 'years' as a submission unit) - this whole category was completely absent before this pass; added 9 new atomic values below. Also removed 'Graduation or Higher Education Documents' - grepped for the literal document phrase and found ZERO real occurrences; the underlying idea ('graduation or above', 405 real mentions) is real and common, but it's a QUALIFICATION-LEVEL descriptor that belongs with COURSE_NAME context, not a distinct document - the actual documents those 405 real rows ask for are already covered by the existing 'Degree'/'Final year marksheet'/'All year marksheets' entries, so this value was pure duplication of those under a confusing, evidence-free label. FOURTH CLEANUP PASS (2026-08-26, from an external domain-expert review): 'Transcripts and Marksheets' violated the atomic-value rule (a bundled 'X and Y' string, same class of problem the DOCUMENTS_ATOMIC redesign exists to prevent). Checked all 11 real rows carrying this phrase (157 weighted occurrences) - 100% appear in the exact same fixed real sentence, 'Kindly provide Degree certificate, Transcripts and Marksheets of the candidate.', always alongside 'Degree' (already its own atomic value) - so the 'Marksheets' half is pure duplication of the existing 'All year marksheets'/'Final year marksheet' entries, and the 'Transcripts' half is a genuinely distinct real document (an official academic transcript, not the same artifact as a marksheet) with zero standalone real mentions to confirm an exact different atomic wording. Replaced 'Transcripts and Marksheets' with a new atomic value 'Academic Transcript' - an agent reproducing the historical combined ask now picks 'Degree' + 'Academic Transcript' + 'All year marksheets'/'Final year marksheet' as separate Mandatory-bucket picks, which is exactly what the document-builder mechanism is for. REVIEWED, KEPT AS-IS (2026-08-26, same external review): 'Highest completed education documents' and 'Second highest completed Education Documents' were flagged as meta-categories rather than atomic document names (correct observation - unlike 'Degree' or 'Final year marksheet', they don't name a specific document). Checked real-data weight before deciding: 1,205 weighted real rows use one of these two phrases with NO specific document named anywhere in the same comment (vs. only 3 weighted rows where a concrete document was also named alongside it) - this is among the highest real-usage weight of any value in this entire list, not a rare artifact, meaning real BGV agents genuinely and routinely ask this way without knowing/needing to specify which exact document. Owner decision (given this evidence): kept both values as-is rather than retiring them - removing them would break the tool's ability to reproduce ~1,200 real historical comments where the agent legitimately never named a specific document. Not merged with each other or with any atomic document value, since 'highest' vs 'second highest' is a real, load-bearing distinction (which of the candidate's qualifications is meant) that a specific document name can't express on its own. FIFTH CLEANUP PASS (2026-08-26, second batch from the same external review - 8 proposed values with scope/context/confidence columns): checked each against search_index.json before deciding, not accepted on the external reviewer's stated confidence alone. ADDED: 'Professional License' [D] - genuinely real and CURRENTLY MISSING despite being actively used: 16 real rows / 58 weighted occurrences ('...Clear and complete scanned Professional License with Roll/Registration Number', 'Kindly Provide document of Professional License'), already resolving to live templates T9/T13, but the bare document name had never been added to this atomic list - a real gap, not a speculative addition, found precisely because the external review prompted a fresh look. 'Migration Certificate' [O], 'Equivalence Certificate (AIU/WES)' [O], 'Course Completion Certificate/Letter' [O] - zero real hits in this dataset for any of the three, but added on Ops judgment as plausible, structurally atomic, non-duplicating document types (stated plainly, same convention as INCOMPLETE_DETAIL/BLUR_DETAIL/CONTACT_OUTCOME). NOT ADDED, with reasoning: 'Convocation Certificate / Degree Award Scroll' - the reviewer's own framing describes this as the document issued when a degree is formally conferred, which is functionally the same real-world artifact as the existing 'Degree' value; adding it risked exactly the 'Ops guy ticks both, produces a redundant sentence' problem this list has been cleaned of twice already (see SECOND CLEANUP PASS), with no real evidence to justify treating it as a genuinely distinct document. 'Third-Party Verification Portal Consent Form' - checked 'WES'/'NSC'/'Qualification Check' as exact words (not substrings) against all 8,284 real comments and found ZERO real hits for any of the three (an initial substring search had false-positived on 'WES' inside 'West Bengal' and 'NSC' inside 'traNSCripts'); the underlying document concept is also already covered by the existing 'Authorization form'/'Consent form' values - if a specific portal (WES/NSC/etc.) does turn up in real data later, the right place for it is a new PORTAL_NAME value (which already lists HEDD/Parchment/etc.), not a new DOCUMENTS entry. SIXTH CLEANUP PASS (2026-08-26, seventh external review batch, proposed as a new standalone FEE_PAYMENT_STATUS tag): rather than create an orphan tag wired into no live template (the two document-type proposals in that batch aren't a 'status' at all - they're physical documents), redirected 2 of the 4 proposed values here as new atomic documents: 'Payment Proof / Bank Transaction Receipt' (zero direct real hits, Ops judgment) and 'Demand Draft / Pay Order' (1 real row/1 weighted - 'DD Proof' - supports this as a real, distinct document type, not covered by any existing value). The other 2 proposed values from that same batch were NOT added here: 'Verification fee payment required from candidate' is a STATUS/reason, not a document - already covered by the existing VERIFICATION_BLOCKER value 'Verification fee payment pending from the candidate'; 'Fee paid, awaiting university reconciliation' is also a status, not a document - added instead as a new VERIFICATION_BLOCKER value (see that tag's own note). 'Bonafide Certificate' as a value distinct from the existing 'Bonafide/NOC' - checked all 64 real rows containing 'bonafide' (186 weighted) and found ZERO that mention 'bonafide' without 'NOC' immediately alongside it - real usage never separates the two, so splitting them would create an unevidenced distinction. 'Official Academic Transcript in Sealed Envelope' - not added as a DOCUMENTS value at all; this describes a HANDLING requirement on top of the already-existing 'Academic Transcript' document, not a different document, so it was added instead as a new SPECIAL_INSTRUCTIONS value (see that tag's own note) restricted to 'Academic Transcript' via applies_to_documents, mirroring how 'Original document, not a photocopy' already works.",
+    "values": [
+      "Degree",
+      "All year marksheets",
+      "Final year marksheet",
+      "1st Semester Marksheet",
+      "2nd Semester Marksheet",
+      "3rd Semester Marksheet",
+      "4th Semester Marksheet",
+      "5th Semester Marksheet",
+      "6th Semester Marksheet",
+      "7th Semester Marksheet",
+      "8th Semester Marksheet",
+      "9th Semester Marksheet",
+      "10th Semester Marksheet",
+      "All Semester Marksheet",
+      "1st Year Marksheet",
+      "2nd Year Marksheet",
+      "3rd Year Marksheet",
+      "4th Year Marksheet",
+      "5th Year Marksheet",
+      "Provisional Certificate",
+      "Highest Passing Education Marksheet",
+      "Higher Secondary Certificate (HSC)",
+      "Highest completed education documents",
+      "HEDD consent form",
+      "Name change proof",
+      "Authorization form",
+      "Consent form",
+      "Secondary School Certificate (SSC)",
+      "Bonafide/NOC",
+      "Diploma/Certificate",
+      "Academic Transcript",
+      "Professional License",
+      "Migration Certificate",
+      "Equivalence Certificate (AIU/WES)",
+      "Course Completion Certificate/Letter",
+      "Authbridge ARN",
+      "Second highest completed Education Documents",
+      "Application Form",
+      "Aadhaar card",
+      "Consolidated Marksheet",
+      "Pass Documents",
+      "Transfer Certificate",
+      "Student ID Card",
+      "INE identification card",
+      "Passport with Photo & Signature",
+      "Payment Proof / Bank Transaction Receipt",
+      "Demand Draft / Pay Order"
+    ],
+    "case_types": {
+      "HEDD consent form": [
+        "Overseas"
+      ],
+      "Aadhaar card": [
+        "Domestic"
+      ],
+      "Student ID Card": [
+        "Overseas"
+      ],
+      "INE identification card": [
+        "Overseas"
+      ],
+      "Passport with Photo & Signature": [
+        "Overseas"
+      ]
+    },
+    "case_types_note": "Added 2026-08-23 (XMind revamp, Step 1 - Domestic/Overseas split). Opt-in metadata: a document with NO entry here is available for both case types. Deliberately only marked the 2 values above, where the name itself makes the restriction unambiguous (HEDD is a UK-specific portal; Aadhaar is an Indian national ID) - the XMind places a much larger set (Semester, Consolidated Marksheet, Pass Documents, Transfer Certificate, per-year breakdown) under its Overseas branch only, but this dataset's real comments show semester-wise marksheet requests too (11 real hits, logged 2026-08-21) without any reliable way to tell from the comment text alone whether those were Domestic or Overseas cases - India-domestic engineering colleges also run on a semester system. Restricting those to Overseas-only on the XMind's placement alone risks hiding a real, needed option from Domestic agents. Left universal (both case types) until confirmed with the owner or checked against case-level Domestic/Overseas data this project doesn't currently have - flagged in PROGRESS_LOG.md rather than guessed. STEP 3 ADDITIONS (2026-08-23): Student ID Card/INE identification card/Passport with Photo & Signature marked Overseas-only on real evidence, not just XMind placement - grepped the dataset and found 'INE identification card or Passport' explicitly in an overseas-context real row, and 14 real Passport mentions clustered with clear overseas markers (EUR/France, 'response from university', name-mismatch-on-passport scenarios) with zero domestic (INR-context) counter-examples - the opposite of what happened with Semester/Year values below, where real domestic (INR) counter-examples were found and blocked the restriction. Student ID Card has zero real hits either way, but nothing contradicts the XMind's Overseas placement either, unlike Semester/Year.",
+    "step3_new_values_note": "Added 2026-08-23 (XMind revamp, Step 3 - missing document values). '9th'/'10th Semester Marksheet' and '1st'-'5th Year Marksheet' extend the existing semester/year granularity the XMind calls for (5-year programs run 10 semesters). Real-data check before adding: '1st Year Marksheet'/'2nd Year Marksheet'/'3rd Year Marksheet' each have 2-3 real mentions in the dataset (one 2nd-Year hit explicitly paired with 'INR300' cost approval - a clearly domestic case, confirming these aren't Overseas-exclusive either); '4th'/'5th Year' and '9th'/'10th Semester' have zero real hits but are added anyway for XMind completeness with that gap stated plainly here rather than silently assumed equally well-evidenced. 'Consolidated Marksheet' has 11 real hits (also appears with INR cost-approval context - left universal, not Overseas-restricted, for the same reason as Semester). 'Pass Documents' and 'Transfer Certificate' have ZERO real hits in either case type - added purely on the XMind's authority since this MVP's own data-mining approach has no way to surface a real but rare/never-yet-seen document type, exactly the limitation discussed earlier this session (mining alone reproduces its own blind spots)."
+  },
+  "INCOMPLETE_DETAIL": {
+    "type": "dropdown_multi",
+    "note": "New tag for T73 ('Incomplete - Other Detail', added 2026-08-24, owner-approved Document Reason revamp: 'add more and standardise the values... each value should be reusable') - a reusable, document-type-agnostic checklist of what makes a submitted document incomplete, used alongside T11 (generic Incomplete), T53 (missing company details - kept as its own distinct scenario since it needs the company-name callout), and T66 (wrong format - kept distinct for the same reason). Multiselect since a real submission can genuinely be incomplete for more than one reason at once (e.g. both missing a signature AND missing a page). Not yet confirmed against real classified data - built on Ops common-sense per the owner's explicit request, stated plainly rather than presented as dataset-confirmed. EXPANDED 2026-08-26 (external review, 5 proposed values): checked each against search_index.json - all 5 came back essentially zero direct real evidence (one 'First Division' hit was a course-name/academic-distinction mention, not a flagged omission; a 'Digilocker' hit just referenced the portal, not a truncated seal), consistent with this tag's existing zero-dataset-confirmation status from when it was first built. Added 4 of the 5, all `[O]`, since they're structurally distinct from the existing 6 values and from each other, not near-duplicates: 'Missing Roll/Registration Number or Student ID on the document' (distinct from the IDENTIFIER_TYPE tag's own similar-sounding value - IDENTIFIER_TYPE/T15 is about the candidate never having GIVEN AuthBridge this number at all, this is about a SUBMITTED document's own printed content lacking it; given how overwhelmingly often real comments ask for a document 'with Roll/Registration Number' - 3,559 weighted rows - this is a highly plausible incomplete-document pattern even with no direct real hit for the omission itself), 'Missing grade scale / CGPA-to-percentage conversion formula', 'Missing Month/Year of Passing or Graduation Date on the document' (again distinct from ANTECEDENTS' similar 'Passing year' value, which is a case-level information-mismatch concept, not a document-content-completeness one), 'Missing division/class awarded (e.g. First Class, Distinction)'. NOT added here: 'Barcode/QR Code/Digital Verification Seal truncated or unreadable' - this describes a SCAN-QUALITY defect (something present but unreadable/cut off), which structurally belongs with BLUR_DETAIL's existing 'Image is cropped or cut off' concept, not with this tag's missing-content framing - added to BLUR_DETAIL instead (see that tag's own note) rather than force-fit here.",
+    "values": [
+      "Missing signature, stamp, or seal",
+      "Missing required candidate/company details (name, date, etc.)",
+      "Not in the approved or required format",
+      "Missing page(s) or section(s)",
+      "Photograph missing or not matching",
+      "Missing official letterhead",
+      "Missing Roll/Registration Number or Student ID on the document",
+      "Missing grade scale / CGPA-to-percentage conversion formula",
+      "Missing Month/Year of Passing or Graduation Date on the document",
+      "Missing division/class awarded (e.g. First Class, Distinction)"
+    ]
+  },
+  "BLUR_DETAIL": {
+    "type": "dropdown_multi",
+    "note": "New tag for T74 ('Blurred/Illegible - Specific Defect', added 2026-08-24, owner-approved Document Reason revamp) - a reusable, document-type-agnostic breakdown of what specifically is unreadable, used alongside T10 (generic Blurred/Illegible) for when the agent wants to state the exact defect rather than a single blanket 'blurred' scenario. Multiselect for the same reason as INCOMPLETE_DETAIL above - a scan can be both faded AND cropped at once. Not yet confirmed against real classified data - built on Ops common-sense per the owner's explicit request, stated plainly rather than presented as dataset-confirmed. ADDED 2026-08-26 (external review, redirected from an INCOMPLETE_DETAIL proposal): 'Barcode/QR code/digital verification seal is truncated or unreadable' - zero direct real hits (a 'Digilocker' match found while checking was just a portal reference, not a truncated-seal report), but this describes a scan-quality defect on modern digital certificates (DigiLocker, e-transcripts), which is this tag's territory (a narrower, more specific case of the existing 'Image is cropped or cut off'), not INCOMPLETE_DETAIL's missing-content territory. FIFTH BATCH (2026-08-26, external review, 4 proposed values): zero real hits for any of the 4 (checked 'watermark', 'glare'/'reflection', 'pixelat'/'low-resolution', 'shadow'/'uneven lighting' against all 8,284 real comments), but all 4 describe genuinely distinct physical/optical scan defects not covered by the existing 5 values (watermark obscured, glare, digital pixelation, and shadow are each a different root cause than 'blurred'/'faded'/'cropped') - added `[O]`, same convention as this tag's original build.",
+    "values": [
+      "Entire copy is blurred or unreadable",
+      "Specific page or section is unreadable",
+      "Text is faded or low contrast",
+      "Image is cropped or cut off",
+      "Barcode/QR code/digital verification seal is truncated or unreadable",
+      "Security watermark or background stamp is unreadable",
+      "Glare or light reflection is hiding text or seals",
+      "Low-resolution or pixelated when zoomed in",
+      "Shadows or uneven lighting are obstructing details"
+    ]
+  },
+  "IDENTIFIER_TYPE": {
+    "type": "dropdown_multi",
+    "converted_to_multiselect_note": "Converted from dropdown_free_hybrid to dropdown_multi 2026-08-24 (owner: 'give multiselect options wherever required, if not now in future they may require so think that way as well'). A case can genuinely be missing more than one identifier at once (e.g. both Roll/Registration Number and a Hall Ticket No.) - no different in kind from ANTECEDENTS/CASE_LEVEL_INFORMATION/VERIFICATION_BLOCKER, all already multiselect for the same reason. Zero code change needed in php/CommentEngine.php - its generic tag-resolution loop already joins any array value via joinList() regardless of the tag's declared type, this only changes how the UI renders the field (chips instead of a single dropdown) and the 'Other' escape hatch still works via the free-text chip input. T15's optimized_text tweaked in templates.json from '...share this identifier...' to '...share this information...' so the sentence reads correctly whether one or several values are selected. 'Other' free-text handling for a multiselect tag reuses the same chip + inline-text mechanic as SPECIAL_INSTRUCTIONS.",
+    "note": "Real values harvested from 1,776 classified rows. Dominated by Roll/Registration Number; long tail normalized under 'Other (specify)'. Added 'Serial Number' Phase 3 (2026-08-18) - confirmed 29 weighted real occurrences across the full 8,284-row dataset, previously falling into 'Other'. XMind revamp Step 4 (2026-08-23): added 5 more identifier types the XMind's 'Roll No./Registration No./Seat No./Admission No./Professional Certificate No./Verification No./Certificate No.' line lists that weren't here - grepped all 8,284 real comments for each and found ZERO real hits for any of the 5 ('Seat No.', 'Admission No.', 'Professional Certificate No.', 'Verification No.', 'Certificate No.'). Added anyway, on the XMind's authority alone, same as 'Pass Documents'/'Transfer Certificate' in Step 3. UPDATED 2026-08-23 (owner asked 'have you checked with the actual comments?' re: the small Information-category value sets): re-ran extraction across ALL 8,284 rows (not just Information-template-matched ones) - found 22 distinct real IDENTIFIER_TYPE values total; the ~12 that looked 'not in dropdown' were almost all casing/punctuation variants of values already here ('exam Roll No', 'student ID number', 'Hall Ticket No.' etc. - same concept, different capitalization/period), not genuine gaps. One genuine new concept found: 'SSN Number' (1 real occurrence, US-context case) - added. Also converted this tag from plain 'dropdown' to 'dropdown_free_hybrid' (adds the 'Other' free-text escape hatch every other picklist tag in this project has) - this was already recommended in the note above when the 5 XMind-only values were added, since a plain dropdown gives an agent no way to say 'the real identifier type isn't any of these', and is even more relevant now that a full re-check confirms real variety exists beyond this list. DUPLICATE WARNING REVIEWED, NOT MERGED (2026-08-26, external review suggested consolidating 'Exam Roll No'/'Roll/Registration Number'/'Hall Ticket No' into standard identifiers): checked exact real-text volume for each independently - 'Roll/Registration Number' (3,551 rows/5,976 weighted), 'Hall Ticket No' (28 rows/33 weighted), 'Exam Roll No' (5 rows/23 weighted) - all three appear as their OWN distinct real phrasing across hundreds to thousands of real comments, not as case/punctuation variants of each other (unlike the earlier casing-variant cleanup this note already documents). This matches known real Indian academic practice: enrollment/registration numbers, exam-session roll numbers, and hall-ticket numbers are frequently genuinely different identifiers issued by the same institution for different purposes, not three names for the same thing - kept separate. EIGHTH BATCH (2026-08-26, external review, 4 proposed values): all zero real hits, but each is a well-known, real, and structurally distinct identifier type used across different systems - added `[O]`: 'PRN (Permanent Registration Number)' (Maharashtra/South Indian universities), 'USN (University Seat Number)' (VTU Karnataka and similar technical universities), 'National Student ID / Unique Student Identifier (USI/ULN)' (Australia's USI, UK's ULN), 'DigiLocker Doc ID / Verification ID' (digital verification string on Indian government e-credentials).",
+    "values": [
+      "Roll/Registration Number",
+      "Hall Ticket No",
+      "Exam Roll No",
+      "Student ID Number",
+      "Reference Number",
+      "Serial Number",
+      "Seat No.",
+      "Admission No.",
+      "Professional Certificate No.",
+      "Verification No.",
+      "Certificate No.",
+      "SSN Number",
+      "PRN (Permanent Registration Number)",
+      "USN (University Seat Number)",
+      "National Student ID / Unique Student Identifier (USI/ULN)",
+      "DigiLocker Doc ID / Verification ID"
+    ]
+  },
+  "ADDRESS_TYPE": {
+    "type": "dropdown",
+    "note": "Enumerated 'pick one' placeholder resolved earlier this project (see OPEN_QUESTIONS.md) — confirmed 3 real values; 'Intermediate' was investigated and rejected as a 4th value. CORRECTED 2026-08-19 (fifth pass, full-template tag audit): removed from T65 - re-checking ALL 30 real T65-resolved rows found this tag was a mismatched assumption. Every single one of the 30 rows asks for the INSTITUTE's address/location ('Require Location with complete address of the ITM University', 'address of institute'), never the candidate's own residential history - so a Current/Previous/Permanent distinction (which only makes sense for a person's address over time) never actually applied here. T65 now uses VS (institute name) instead - see T65's own reason_clause_added for the full writeup. Kept defined here (not deleted) in case a genuine residential-address template is built later; currently unused by any live template in this Education MVP. SEVENTH BATCH (2026-08-26, external review): added 'Longest Stay' `[O]` - zero real hits (unsurprising, since this tag isn't wired into any live template yet to have real rows against it), but a genuinely distinct, plausible 4th value for a future residential-address template (candidates who moved frequently, e.g. hostel residents during academic years, where a client/auditor wants the location of longest residence regardless of current/previous/permanent status) - added now since it's zero regression risk while the tag remains unwired, rather than deferred to whenever a residential template is eventually built.",
+    "values": [
+      "Current",
+      "Previous",
+      "Permanent",
+      "Longest Stay"
+    ]
+  },
+  "COUNTRY": {
+    "type": "dropdown",
+    "note": "Value domain = Old Source Files/master country.csv (223 rows). Top real usage shown first for Education (USA/UK/Canada dominate), full list available via search-as-you-type.",
+    "values": [
+      "USA",
+      "United Kingdom",
+      "Canada",
+      "India",
+      "Australia",
+      "Ireland",
+      "Germany",
+      "Switzerland",
+      "Singapore",
+      "Nepal",
+      "Philippines",
+      "Belgium",
+      "France",
+      "Italy",
+      "China",
+      "Malaysia",
+      "Spain",
+      "Armenia",
+      "Russia",
+      "Sweden"
+    ],
+    "full_list_source": "Old Source Files/master country.csv"
+  },
+  "CURRENCY": {
+    "type": "dropdown",
+    "note": "Value domain = Old Source Files/currency Name.csv (12 rows). Real usage: INR/USD/GBP cover ~99% of Education cases.",
+    "values": [
+      "INR",
+      "USD",
+      "GBP",
+      "EUR",
+      "AUD",
+      "Rs.",
+      "LKR"
+    ]
+  },
+  "CHECK_NAME": {
+    "type": "dropdown_searchable",
+    "note": "Auto-filled from Bridge navigation context in production (per owner: 'check family and type autofills'). Values here are the Education-relevant subset of the authoritative Reference Data/master checks.csv (381 rows total) - NOT the raw extracted_tags harvest, which turned out to be mostly misclassified qualification names (e.g. bare 'MBA') rather than real check names. Kept here only so the standalone prototype can simulate the header.",
+    "values": [
+      "Academic Reference Check",
+      "Digital Education Verification",
+      "Education Document Validation",
+      "Education Institution Validation",
+      "Education Verification",
+      "Education Verification via DigiLocker",
+      "Education Verification W",
+      "Education Verification Written",
+      "Professional Certificate Check",
+      "Professional License Check"
+    ],
+    "full_list_source": "Reference Data/master checks.csv"
+  },
+  "VERIFICATION_BLOCKER": {
+    "type": "dropdown_multi",
+    "note": "THE KEY REASON-DRIVING TAG. Real values harvested from 90 classified rows replace the earlier guessed sub-type list. Powers both the Document 'Wrong/Rejected' Reason sub-type AND the special-instruction checkboxes below. Converted to multiselect 2026-08-18 (candidate-empathy audit) — a real rejection can have more than one simultaneous cause (e.g. both blurred AND signatures mismatched); safe to multiselect everywhere it's used because every template places it at the end of a \"because X\" clause, which reads correctly whether one or several reasons are AND-joined. EXPANDED 2026-08-24 (owner-approved Document Reason revamp - 'add more and standardise the values... each value should be reusable'): added 6 more generic, document-type-agnostic rejection reasons (below) in the same reusable-categorical-statement style as the 14 above, none of them tied to one specific document's wording. Not yet confirmed against real classified data - built on Ops common-sense per the owner's explicit request, stated plainly per this project's practice of flagging unconfirmed additions rather than presenting them as dataset-backed like the 14 original values. THIRD BATCH (2026-08-26, external review, 6 proposed values with scope/context/confidence columns): checked each against search_index.json and against the existing 20 values before acting. ADDED, both restricted to T6/T60 (same institutional/process-blocker-not-fixable-by-resubmission class already established for 'Institute is not recognized by the verifying body' etc. - see applies_to_templates_note_20260825): 'Verification fee payment pending from the candidate' (zero real hits in this dataset, but a distinct, plausible real blocker - institute/portal-side fee gating record release, not the same as the existing 'Dues are pending with the institute' which is AuthBridge/client-side dues) and \"Document's issuing/founding date predates the institution's own founding or accreditation date\" (zero real hits, but a genuine diploma-mill/fraud indicator, conceptually adjacent to the already-T6/T60-restricted 'Institute is not recognized by the verifying body'). REJECTED, all four already covered elsewhere in the system rather than being genuine gaps: 'Student Roll/Registration/Enrollment Number not provided or invalid' - checked and this is already the dominant real IDENTIFIER_TYPE value ('Roll/Registration Number', 3,559 real rows) driving template T15 directly; adding it here too would just create a second, confusing route to the same real-world case. 'Mandatory third-party portal registration pending by candidate' - zero real hits, and already served by the existing PORTAL_ACTION tag + template T17 ('register on the Digital Certificates Platform...'), which was purpose-built for exactly this scenario. 'Institute demands candidate's direct authorization via registered email/portal' - the 3 real rows found under related search terms all resolve to needing an Authorization form/Consent form document (already atomic DOCUMENTS values) plus the existing 'Filled and hand-signed by the candidate' Special Instruction - no gap. 'Discrepancy in specialization/major between document and university ledger' - near-duplicate of the existing 'Course name on document does not match the course being verified'; checked all 10 real rows containing 'specialization' and none actually describe a mismatch, they're just course names that happen to include a specialization (e.g. 'MSc Applied Psychology (Specialisation in...)') - no real evidence to justify a separate value alongside the one already covering course-name mismatches. SEVENTH BATCH (2026-08-26, external review, redirected from a proposed standalone FEE_PAYMENT_STATUS tag): added 'Fee has been paid by the candidate but the institute has not yet reconciled/confirmed receipt', restricted to T6/T60 (same institutional-blocker class as the two other fee/founding-date values added in the third batch) - zero real hits, but a genuinely distinct blocker stage from the existing 'Verification fee payment pending from the candidate' (that one means payment hasn't happened yet; this one means it has, but the institute's side hasn't caught up) - added here rather than inventing a new orphan tag, since VERIFICATION_BLOCKER already has the exact 'why can't we proceed' shape this concept needs and is already wired into T6/T60.",
+    "values": [
+      "Document is not sufficient on its own — a supporting document is also needed",
+      "Name on document does not match name in application form",
+      "Letterhead verification is not possible for this institute",
+      "Scanned copy is not clear / is cut off — needs a clear, uncut copy",
+      "Online record does not fulfil the mandatory verification requirements",
+      "Institute is not recognized by the verifying body",
+      "File is not in the required format",
+      "Course name on document does not match the course being verified",
+      "Year of passing on document is incorrect / does not match",
+      "Both-side colour copy required — only one side or black & white was received",
+      "Signatures on document do not match across pages",
+      "Document owner has disabled third-party verification of this record",
+      "Dues are pending with the institute, blocking verification",
+      "Record could not be located / traced by the institute",
+      "Wrong document type was submitted — does not match what was requested",
+      "Document appears to be tampered or altered",
+      "Photocopy submitted where an original/certified copy is required",
+      "QR code or digital verification on the document could not be validated",
+      "Document was issued by an unauthorized or unrecognized source",
+      "Document has been cancelled or revoked by the issuing institute",
+      "Verification fee payment pending from the candidate — institute/portal requires payment before releasing records",
+      "Document's issuing/founding date predates the institution's own founding or accreditation date — possible unrecognized institute",
+      "Fee has been paid by the candidate but the institute has not yet reconciled/confirmed receipt"
+    ],
+    "applies_to_templates": {
+      "Letterhead verification is not possible for this institute": ["T6", "T60"],
+      "Institute is not recognized by the verifying body": ["T6", "T60"],
+      "Document owner has disabled third-party verification of this record": ["T6", "T60"],
+      "Dues are pending with the institute, blocking verification": ["T6", "T60"],
+      "Record could not be located / traced by the institute": ["T6", "T60"],
+      "Verification fee payment pending from the candidate — institute/portal requires payment before releasing records": ["T6", "T60"],
+      "Document's issuing/founding date predates the institution's own founding or accreditation date — possible unrecognized institute": ["T6", "T60"],
+      "Fee has been paid by the candidate but the institute has not yet reconciled/confirmed receipt": ["T6", "T60"]
+    },
+    "applies_to_templates_note_20260825": "Added 2026-08-25 (owner: 'wherever it would look accurate and correct, there it should be' - re: T13/T63 showing the full 20-value list including reasons that don't fit a 'please provide an acceptable copy' resubmission ask). Root-caused via search_index.json's real extracted_tags, grouped by resolved_template_id: T13's real VERIFICATION_BLOCKER values (14 distinct, e.g. 'Documents not sufficient', 'Clear and complete scanned', 'both side colored copies required', 'mismatch found in the course name', 'not in Opencert file format') are ALL document-quality/mismatch defects a candidate can actually fix by resubmitting a better copy. T6's real values (11 distinct: 'Non Recognized Institute', 'Verification of this document has been disabled by the document owner', 'pending dues', 'records related to the certificate cannot be found', 'letterhead verification is not possible') are institutional/process blockers a document resubmission cannot fix at all - asking a candidate to 'provide an acceptable copy' because 'Dues are pending with the institute' doesn't logically follow, since a new copy of the same document does nothing to clear dues. Restricted these 5 values (absent-is-universal, same convention as ANTECEDENTS/DOCUMENTS/SPECIAL_INSTRUCTIONS) to T6 (Candidate Non-Cooperation/Verification blocked) and T60 (TAT extension request) only - both ask the CLIENT how to proceed rather than asking the candidate to fix a document, so any blocking reason (document-related or not) is valid context there. The remaining 15 values stay universal across T6/T13/T60/T63: confirmed real T13 evidence for 10 of them directly, and the other 5 (Wrong document type submitted, Document tampered/altered, Photocopy where original required, QR code could not be validated, Document cancelled/revoked) describe a document defect the candidate CAN address by obtaining/submitting a correct, current, legitimate copy, so they stay available to T13/T63 too - stated plainly as Ops judgment for these 5, not confirmed against real T13/T63 rows the way the other 10 are. T63 evidence is thin (1 real row: 'signatures must be identical') but its raw_text/optimized_text is structurally identical to T13's ('...cannot be accepted because <VERIFICATION_BLOCKER>. Kindly provide an acceptable copy.'), so the same document-fixable-only restriction was applied to it by the same reasoning, not independently re-derived from its own real data."
+  },
+  "CLIENT_ACTION": {
+    "type": "dropdown",
+    "note": "Client Approval branch — what AuthBridge should do next when candidate can't/won't cooperate. Real value harvested: 'conduct Stamp verification' (58 rows, dominant). Expanded Phase 3 (2026-08-18) with 3 additional options carried over from an earlier session's Tag Glossary v2 analysis (Session 4, low-sample-size draft, ~7 real examples) rather than re-derived fresh this pass - flagged in PROGRESS_LOG.md as lower-confidence than the dominant Stamp-verification value. ELEVENTH BATCH (2026-08-26, external review, 3 proposed values): checked each against real data and the existing 7 values. ADDED, both `[O]`: 'authorize candidate-paid verification fee' (zero direct hits, but the CLIENT_ACTION counterpart to the 'Verification fee payment pending from the candidate' VERIFICATION_BLOCKER value added earlier today - T6/T60 pair a blocker reason with a client action, and this tag had no fee-related action option at all); 'provide alternate candidate contact details' (5 real rows/17 weighted confirm 'alternate contact details' is a real, recurring real-world request in this broader dataset, even though the specific rows found resolve to templates outside this Education MVP's live scope). REJECTED: 'approve candidate waiver / accept as-is' - functionally the same action as the existing 'proceed without the document/information' (both mean the client tells AuthBridge to move forward despite the gap); the 'redundant secondary proof' justification given explains WHY a client might choose it, but doesn't change the actual instruction text needed, so it would just be a reworded duplicate.",
+    "values": [
+      "conduct Stamp verification",
+      "close the case as Unable to Verify",
+      "proceed with alternate verification method",
+      "continue follow-up for a further defined period",
+      "close the case as Discrepant",
+      "escalate for manual review",
+      "proceed without the document/information",
+      "authorize candidate-paid verification fee",
+      "provide alternate candidate contact details"
+    ]
+  },
+  "SPECIAL_INSTRUCTIONS": {
+    "type": "dropdown_multi",
+    "note": "Non-exhaustive but finite set of recurring submission-quality instructions, derived from VERIFICATION_BLOCKER real values + T16/T25/T38/T53/T54/T66 template language. Free-text 'Other instruction' always available. Expanded Phase 3 (2026-08-18) per manager feedback point #4 ('Sealed and signed is missing') - confirmed by directly grepping all 8,284 real comments: 'seal and sign(ature)' appears in ~695 weighted rows and 'hand signed' in ~753 weighted rows (mostly on consent-form submissions) - both were previously missing entirely. SECOND CLEANUP PASS (2026-08-21, owner-flagged duplicate check): removed 'Duly signed by the institution' - grepping the full 8,284-row dataset found only 3 real mentions of 'duly signed' vs. 80 for 'sealed and signed'/'seal and sign', both describing the same real institutional-signature requirement; kept 'Sealed and signed by the institution' as the canonical, better-evidenced phrasing so an agent can no longer tick both and produce a redundant sentence. THIRD ADDITION (2026-08-21, same day): owner spotted 'Clear and complete scanned/Uncut' missing from a generated comment during a 10-real-comment live demo. Grepped the full dataset - this is not a minor gap, it's one of the single most common phrases in the ENTIRE dataset: 'Clear and complete' appears in 3,724 of 8,284 real rows (~45%), overwhelmingly on T9/Document-Missing (3,275 of those). Roughly half of those (1,998) also add '/Uncut'. Added as one combined value, mirroring the existing 'Both sides, colour copy' precedent (a compound scan-quality instruction, not split into two separate checkboxes). FOURTH ADDITION (2026-08-26, from an external domain-expert review): added 'Sealed and mailed/couriered directly by the institution - not a scanned/uploaded copy', restricted via applies_to_documents to 'Academic Transcript' only. This is a real, common requirement for US/UK/Canada institutions specifically for official transcripts (registrars often refuse a scanned upload and require the document to arrive directly from the issuing institution) - zero real hits for this exact requirement in the current 8,284-row dataset, so added on Ops judgment (stated plainly, not dataset-confirmed), but it's a genuine HANDLING instruction on an existing document rather than a new document in its own right, so it belongs here rather than as a new DOCUMENTS entry (see that tag's note for the full reasoning on why it wasn't added there). FIFTH BATCH (2026-08-26, external review, 5 proposed values): checked each against real data and against the existing 10 values before acting. ADDED, all `[O]` (zero direct real hits for any of the 3): 'Downloaded directly from the issuing portal (e.g. DigiLocker/university portal) - not a photo/screenshot' (a distinct SOURCE-CHANNEL requirement, not a copy-quality one - 1 real row confirms DigiLocker is a real channel in this dataset, though not phrased as this exact instruction); 'Attested by a Gazetted Officer or Notary Public' (distinct from the existing 'Self-attested by the candidate' - THIRD-PARTY attestation is a different real requirement, common for Indian document submissions); 'Must be issued on official university/college letterhead' (a forward-looking submission instruction, distinct from VERIFICATION_BLOCKER's existing backward-looking 'Letterhead verification is not possible for this institute' rejection reason - 79 weighted real rows confirm letterhead is a live, common concern in this dataset, substantiating it as worth having on the instruction side too, not just the rejection side). REJECTED, both as near-duplicates of what a multiselect combination of EXISTING values already expresses (same 'don't pre-bake combinations' principle used when the ARN special instructions were composed back on 2026-08-23): 'Color scan of original document (photocopies/scans of copies not accepted)' - this is just 'Original document, not a photocopy' + 'Both sides, colour copy' ticked together; 'Scan must include both front and back pages (including grading scale/instructions)' - this is the existing 'Both sides, colour copy' value under a different justification, not a different actual instruction. SIXTH BATCH (2026-08-26, owner: 'we can add more and we can separate some values also from these... identify the multiple ones, keep them and also create a single instruction as well, identify few more values and add them as well'). SPLITS (owner explicitly wants the original compound value KEPT alongside the new atomic pieces, not replaced - unlike every other atomic-value cleanup in this project's history): 'Both sides, colour copy' -> also added 'Both sides (front and back)' and 'Colour copy (not black & white)' as standalone pieces, so an agent can ask for one without implying the other (a document can need a colour scan without needing both sides, or vice versa). 'Clear and complete, scanned copy (uncut, where applicable)' -> also added 'Clear and complete (fully legible, nothing missing)' and 'Scanned copy, uncut (where applicable)' as standalone pieces (legibility and un-cropped-ness are genuinely separate defects). 'Filled and hand-signed by the candidate' -> also added 'Filled out completely by the candidate' and 'Hand-signed by the candidate (not a digital/typed signature)' as standalone pieces (a form can be filled but not hand-signed, or vice versa - e.g. a candidate types their name instead of signing). 'Downloaded directly from the issuing portal (e.g. DigiLocker/university portal) — not a photo/screenshot' -> also added 'Downloaded directly from the issuing portal (e.g. DigiLocker/university portal)' and 'Not a photo or screenshot of the document' standalone (source-channel vs. capture-method are different real requirements - a document could be portal-sourced but still submitted as a photo of a screen, or non-portal-sourced but still a proper scan). 'Sealed and mailed/couriered directly by the institution — not a scanned/uploaded copy' -> also added 'Mailed/couriered directly by the institution (not a scanned/uploaded copy)' as a standalone piece WITHOUT re-adding 'sealed' as its own value, since 'Sealed and signed by the institution' already exists and re-splitting 'sealed' out here would just recreate that value under a different name (avoiding the same 'parallel redundant route' problem this project has caught multiple times before); same applies_to_documents restriction (Academic Transcript) carried over to the new split. 'Signed and dated within the last 3 years' -> also added 'Dated within the last 3 years' standalone (the signature-recency and date-recency concepts are separable - a document can be freshly dated without being freshly signed, e.g. a re-stamped older signature). NOT split (kept as single values, considered and rejected): 'Sealed and signed by the institution' (historical precedent from Phase 3 - explicitly merged FROM two near-duplicate phrasings in the real data, so un-merging it now would reverse a deliberate, evidence-based decision); 'Original document, not a photocopy', 'Signed with the correct/updated date', 'Attested by a Gazetted Officer or Notary Public', 'Company/entity name entered exactly as...', 'In the approved format specified for this document', 'Must be issued on official university/college letterhead' - each already names one concept, not a bundle. NEW STANDALONE ADDITIONS (5, none overlapping any existing SPECIAL_INSTRUCTIONS/VERIFICATION_BLOCKER/BLUR_DETAIL/INCOMPLETE_DETAIL/CLIENT_ACTION/DOCUMENTS value, checked cross-tag before adding): 'Certified English translation required if not originally in English' `[D-weak]` (a handful of real rows reference non-English documents needing translation, not a dominant pattern but a genuine recurring one); 'Password-protected files must be submitted with the password provided separately' `[O]`; 'All pages must be submitted, including blank pages' `[O]`; 'QR code or digital verification seal must be scannable' `[O]`; 'Photograph must be clearly visible and matching the candidate' `[O]` - all 4 `[O]` values are Ops judgment only, zero direct real-data hits, stated plainly per this project's standing convention. REJECTED as duplicates rather than added: a proposed 'Institution's official stamp/seal must be visible and legible' value - this is the same real requirement as the existing 'Sealed and signed by the institution', just reworded; and the owner's pasted real comment ('Kindly provide valid documentary proof supporting the name change (e.g., Gazette notification / affidavit / legal name change document)') - investigated and found this is NOT a missing SPECIAL_INSTRUCTIONS gap at all, it's a DOCUMENTS gap that's already fully covered: DOCUMENTS already has an atomic 'Name change proof' value, directly sourced from this exact real comment pattern (64 weighted real rows mention 'name change', 16 mention 'gazette', 28 mention 'affidavit', all attaching to that existing DOCUMENTS value, not to any SPECIAL_INSTRUCTIONS concept) - adding a SPECIAL_INSTRUCTIONS value for it would create exactly the kind of duplicate/parallel-route problem this project has repeatedly caught and avoided in past Gemini-review batches, so nothing was added here for it. SEVENTH ADDITION (2026-08-26, owner-reported gap): owner tried to generate their own real historical comment ('Require Industrial Training Institute (ITI) Clear and complete scanned Degree and Final year marksheet with Roll/Registration Number.') and couldn't, because no value existed for 'the resubmitted document must show the Roll/Registration Number.' Checked for duplication against IDENTIFIER_TYPE (used by T15, Information/Missing) first, since that tag also has a 'Roll/Registration Number' value - confirmed these are NOT duplicates: IDENTIFIER_TYPE/T15 means the CASE is missing that piece of identifying information outright (nothing on file states it), whereas this new SPECIAL_INSTRUCTIONS value is a document-quality instruction attached to a document already being requested (T9/T10/T11/etc., any Document template) - telling the agent the resubmitted scan must clearly display that number, a completely different real scenario. Directly quantified against the full 8,296-row search_index.json: 'roll/registration number' (any phrasing) appears in 3,554 rows / 5,980 weighted occurrences - and critically, 5,290 of those weighted occurrences (the overwhelming majority) attach to T9 (Document - Missing), following the near-identical real pattern 'Require [Institute] Clear and complete scanned [Document] with Roll/Registration Number' - only 61 weighted occurrences attach to T15 (Information - Missing Identifier). This is a materially larger and more common real instruction than several already-live Special Instructions values, added `[D]` (dataset-confirmed, not Ops judgment). NOTE FOR FUTURE REVIEW (not fixed this pass, flagged not silently corrected): the '3,551 rows/5,976 weighted' figure cited earlier in this same note under 'DUPLICATE WARNING REVIEWED' for IDENTIFIER_TYPE's 'Roll/Registration Number' value was a raw text grep across the WHOLE dataset, not scoped to T15-resolved rows specifically - given this pass's finding that only ~61 weighted rows of that figure actually resolve to T15, that older citation likely overstates IDENTIFIER_TYPE's own real T15 usage and was actually mostly counting this newly-added SPECIAL_INSTRUCTIONS scenario instead; IDENTIFIER_TYPE's 'Roll/Registration Number' value itself is not being removed (T15 still has genuine real usage, just smaller than previously stated), but the discrepancy is worth a dedicated look if the owner wants IDENTIFIER_TYPE's evidence re-verified.",
+    "values": [
+      "Both sides, colour copy",
+      "Clear and complete, scanned copy (uncut, where applicable)",
+      "Original document, not a photocopy",
+      "Self-attested by the candidate",
+      "In the approved format specified for this document",
+      "Company/entity name entered exactly as: AuthBridge Research Services Pvt. Ltd.",
+      "Sealed and signed by the institution",
+      "Filled and hand-signed by the candidate",
+      "Signed and dated within the last 3 years",
+      "Signed with the correct/updated date",
+      "Sealed and mailed/couriered directly by the institution — not a scanned/uploaded copy",
+      "Downloaded directly from the issuing portal (e.g. DigiLocker/university portal) — not a photo/screenshot",
+      "Attested by a Gazetted Officer or Notary Public",
+      "Must be issued on official university/college letterhead",
+      "Both sides (front and back)",
+      "Colour copy (not black & white)",
+      "Clear and complete (fully legible, nothing missing)",
+      "Scanned copy, uncut (where applicable)",
+      "Filled out completely by the candidate",
+      "Hand-signed by the candidate (not a digital/typed signature)",
+      "Downloaded directly from the issuing portal (e.g. DigiLocker/university portal)",
+      "Not a photo or screenshot of the document",
+      "Mailed/couriered directly by the institution (not a scanned/uploaded copy)",
+      "Dated within the last 3 years",
+      "Certified English translation required if not originally in English",
+      "Password-protected files must be submitted with the password provided separately",
+      "All pages must be submitted, including blank pages",
+      "QR code or digital verification seal must be scannable",
+      "Photograph must be clearly visible and matching the candidate",
+      "Must clearly show the Roll/Registration Number"
+    ],
+    "applies_to_documents": {
+      "Signed and dated within the last 3 years": [
+        "Authbridge ARN"
+      ],
+      "Signed with the correct/updated date": [
+        "Authbridge ARN"
+      ],
+      "Company/entity name entered exactly as: AuthBridge Research Services Pvt. Ltd.": [
+        "Consent form",
+        "Authorization form",
+        "HEDD consent form"
+      ],
+      "Sealed and mailed/couriered directly by the institution — not a scanned/uploaded copy": [
+        "Academic Transcript"
+      ],
+      "Mailed/couriered directly by the institution (not a scanned/uploaded copy)": [
+        "Academic Transcript"
+      ]
+    },
+    "applies_to_documents_note": "Added 2026-08-23 (XMind revamp, Step 2). The XMind gives ARN its own 3 special-instruction options ('Hand signed dated within last 3 Years', the same '& mention the company name as Authbridge...', and 'Signed with correct date') - mirroring DOCUMENTS' case_types pattern, this is opt-in metadata: a value with no entry here shows regardless of which documents are checked (the existing 7 values are all genuinely document-agnostic - e.g. 'Both sides, colour copy' applies to any physical document, not just ARN). Only 2 new values added rather than 3: the recency window ('within the last 3 years') and the date-correction concept are both genuinely new, but the XMind's 2nd option is just the 1st option PLUS the company-name instruction that already exists as its own value ('Company/entity name entered exactly as...') - composing the two via multiselect reproduces it without adding a near-duplicate, consistent with this project's atomic-values-not-pre-baked-combinations approach (see DOCUMENTS' own note).",
+    "applies_to_documents_note_20260825": "Restricted 'Company/entity name entered exactly as: AuthBridge Research Services Pvt. Ltd.' to Consent form/Authorization form/HEDD consent form 2026-08-25 (owner: 'wherever it would look accurate and correct, there it should be' - re: Verification Blocker/Special Instructions showing an unfiltered generic list). This instruction only makes sense for a document that HAS a company-name field to fill in (a consent/authorization form); it was previously showing even when the only checked document was e.g. 'Degree' or 'Marksheet', which have no such field at all - a candidate/agent checking that box for a degree certificate would be told to write the company name ON a document that has nowhere to put it. Note: T53 already states the company name directly in its own optimized_text (not via this checkbox) - if an agent checks Consent form/Authorization form under T53 too, this instruction can still appear and would be redundant with T53's built-in clause, but that's a pre-existing minor overlap (the checkbox was always optional/skippable) rather than something this restriction introduces or fixes; this change's main effect is on the OTHER Document templates (T9/T11/etc.) where an agent might check 'Consent form' or 'Authorization form' and want this instruction without a dedicated template like T53.",
+    "display_phrases": {
+      "Both sides, colour copy": "Must be a colour copy showing both sides of the document.",
+      "Clear and complete, scanned copy (uncut, where applicable)": "Must be a clear, complete scanned copy - not cropped or cut off, where applicable.",
+      "Original document, not a photocopy": "Must be an original document (photocopies/scans of photocopies are not accepted).",
+      "Self-attested by the candidate": "Must be self-attested (signed) by the candidate.",
+      "In the approved format specified for this document": "Must be in the approved format specified for this document.",
+      "Company/entity name entered exactly as: AuthBridge Research Services Pvt. Ltd.": "The company/entity name must be entered exactly as: AuthBridge Research Services Pvt. Ltd.",
+      "Sealed and signed by the institution": "Must be sealed and signed by the institution.",
+      "Filled and hand-signed by the candidate": "Must be filled out and hand-signed by the candidate.",
+      "Signed and dated within the last 3 years": "Must be signed and dated within the last 3 years.",
+      "Signed with the correct/updated date": "Must be signed with the correct, updated date.",
+      "Sealed and mailed/couriered directly by the institution — not a scanned/uploaded copy": "Must be sealed and mailed or couriered directly by the institution - a scanned or uploaded copy will not be accepted.",
+      "Downloaded directly from the issuing portal (e.g. DigiLocker/university portal) — not a photo/screenshot": "Must be downloaded directly from the issuing portal (e.g. DigiLocker or the university portal) - a photo or screenshot will not be accepted.",
+      "Attested by a Gazetted Officer or Notary Public": "Must be attested by a Gazetted Officer or Notary Public.",
+      "Must be issued on official university/college letterhead": "Must be issued on official university/college letterhead.",
+      "Both sides (front and back)": "Must show both sides (front and back) of the document.",
+      "Colour copy (not black & white)": "Must be a colour copy, not black & white.",
+      "Clear and complete (fully legible, nothing missing)": "Must be clear and complete - fully legible, with nothing missing.",
+      "Scanned copy, uncut (where applicable)": "Must be a scanned copy that is not cropped or cut off, where applicable.",
+      "Filled out completely by the candidate": "Must be filled out completely by the candidate.",
+      "Hand-signed by the candidate (not a digital/typed signature)": "Must be hand-signed by the candidate - a digital or typed signature is not accepted.",
+      "Downloaded directly from the issuing portal (e.g. DigiLocker/university portal)": "Must be downloaded directly from the issuing portal (e.g. DigiLocker or the university portal).",
+      "Not a photo or screenshot of the document": "Must not be a photo or screenshot of the document.",
+      "Mailed/couriered directly by the institution (not a scanned/uploaded copy)": "Must be mailed or couriered directly by the institution - a scanned or uploaded copy will not be accepted.",
+      "Dated within the last 3 years": "Must be dated within the last 3 years.",
+      "Certified English translation required if not originally in English": "If the document is not originally in English, a certified English translation must be provided.",
+      "Password-protected files must be submitted with the password provided separately": "If the file is password-protected, the password must be provided separately.",
+      "All pages must be submitted, including blank pages": "All pages must be submitted, including any blank pages.",
+      "QR code or digital verification seal must be scannable": "Any QR code or digital verification seal on the document must be scannable.",
+      "Photograph must be clearly visible and matching the candidate": "Any photograph on the document must be clearly visible and match the candidate.",
+      "Must clearly show the Roll/Registration Number": "Must clearly show the Roll/Registration Number on the document."
+    },
+    "display_phrases_note": "Added 2026-08-26 per owner instruction, mirrors ANTECEDENTS' existing display_phrases mechanism (added 2026-08-23) - the dropdown option text stays short/scannable for the agent picking it, but the rendered bullet (see CommentEngine.php's specialInstructionsBlock(), used by T9's new 'Document Requirements:' block) states the fuller, candidate-facing version. Scoped to T9 only for now (owner: 'Just T9 (Missing) for now') - every other Document template still uses the old inline 'Please ensure the copy is: X and Y.' sentence with the raw dropdown wording, unaffected by this map. Extended 2026-08-26 (sixth batch) to cover all 15 new/split values added that same pass, so the T9 block renders correctly regardless of which of the now-29 values an agent picks."
+  },
+  "VS": {
+    "type": "free_text",
+    "note": "Institute/university/employer name — unbounded, never enumerate. Auto-filled from case context where available, else free text."
+  },
+  "QUALIFICATION_LEVEL": {
+    "type": "dropdown_multi",
+    "note": "Added 2026-08-26 for the 8 course_vs_optional templates (T9/T10/T11/T12/T13/T14/T15/T63 - see php/CommentEngine.php's course_vs_optional branch). When Course/Degree name, Institute name, Year started, and Year completed are ALL left blank, CONTEXT used to fall back silently to the fixed 'Education Verification' phrase (task #108), giving the agent no way to say WHICH of a candidate's possibly-several real degrees a case-less comment is actually about. Owner: pick from UG/PG/Highest/Second-highest/Third-highest degree instead, multiselect, MANDATORY in that specific blank branch (owner's explicit choice - 'user has to select any one option' clarified via AskUserQuestion as 'can pick more than one, not exactly one'). This is NOT a reintroduction of the old QUALIFICATION_TYPE tag removed 2026-08-18 (Undergraduate/Postgraduate/Diploma/Doctorate, always shown, folded into every course selection) - that removal is still correct, since a real COURSE_NAME value like 'Bachelor of Technology (B.Tech)' already states its own level. This tag only appears as a FALLBACK when no course is named at all, a materially different scenario the old tag never covered. Checked for duplication against two similar-sounding existing values before adding: DOCUMENTS' 'Highest completed education documents'/'Second highest completed Education Documents' (a DOCUMENT NAME the agent is requesting, e.g. 'please submit your highest completed education certificate' - a different concept from this tag, which qualifies WHICH degree an already-chosen document or issue pertains to) and CASE_LEVEL_INFORMATION's 'Highest Completed Education Details' (T51 - the case is missing info ABOUT which is the candidate's highest education, a data-gap concept, not a qualifying-context one). Neither is a true duplicate of this tag's purpose. Values are Ops judgment `[O]` (not dataset-mined - this is new UI-flow logic, not a real-comment classification), short/scannable dropdown labels per project convention, with a `display_phrases` map (reusing the same mechanism as SPECIAL_INSTRUCTIONS/ANTECEDENTS) providing the fuller phrase actually rendered into CONTEXT.",
+    "values": [
+      "UG",
+      "PG",
+      "Highest degree",
+      "Second highest degree",
+      "Third highest degree"
+    ],
+    "display_phrases": {
+      "UG": "Undergraduate (UG) qualification",
+      "PG": "Postgraduate (PG) qualification",
+      "Highest degree": "highest completed degree",
+      "Second highest degree": "second-highest completed degree",
+      "Third highest degree": "third-highest completed degree"
+    }
+  },
+  "COURSE_NAME": {
+    "type": "dropdown_free_hybrid",
+    "note": "Converted from unbounded free_text to a cleaned picklist 2026-08-18, replacing the separate QUALIFICATION_TYPE tag (removed same pass, see PROGRESS_LOG.md) — owner feedback: 'remove Undergraduate (UG) - this is unnecessary', since a real course name like 'Bachelor of Technology (B.Tech)' already states the qualification level on its own; a bolted-on 'Undergraduate (UG)' prefix was redundant, not clarifying. Values below are the cleaned, deduplicated top real course names mined from the Detail sheet's extracted_tags column in Actual_To_Atomic_Mapping.xlsx (958 distinct raw spelling/case/punctuation variants collapsed to one canonical 'Full Name (Abbreviation)' entry per real qualification, ranked by weighted frequency — e.g. 'Bachelor of Technology (B.Tech)' merges 'B.Tech', 'Bachelor Of Technology (b.tech)', 'Bachelor of Technology', etc.). 'Other' always available as free text for a program not in this list — the specific specialization (e.g. 'Computer Science') still goes in that free-text value alongside the picklist choice, this list only fixes the degree-level ambiguity. SEVENTH BATCH (2026-08-26, external review, 6 proposed course values): all 6 proposals bundled a UG+PG or dual-abbreviation pair into one value (e.g. 'Bachelor of Pharmacy (B.Pharm) / M.Pharm', 'Bachelor of Law (LL.B) / Master of Law (LL.M)') - split every one into its own atomic entry, same atomic-value rule this project enforces for DOCUMENTS (a single picklist entry must name one qualification level, not two, or an agent is forced to guess which one a real case means). Checked each split half independently against search_index.json - all 9 resulting atomic values are dataset-confirmed `[D]`: 'Bachelor of Architecture (B.Arch)' (28 rows/39 weighted), 'Bachelor of Pharmacy (B.Pharm)' (32/47) and 'Master of Pharmacy (M.Pharm)' (16/30) split from the bundled Pharmacy proposal, 'Bachelor of Law (LL.B)' (33/43) and 'Master of Law (LL.M)' (4/6) split from the bundled Law proposal, 'Post Graduate Diploma in Management (PGDM)' (83/123, already a single atomic value as proposed), 'Bachelor of Medicine, Bachelor of Surgery (MBBS)' (3/4, kept as one value since MBBS is itself a single combined-degree qualification in real usage, not two separate ones), 'Diploma in General Nursing and Midwifery (GNM)' (12/15) and 'Bachelor of Science in Nursing (B.Sc Nursing)' (57/173) split from the bundled Nursing proposal.",
+    "values": [
+      "Bachelor of Technology (B.Tech)",
+      "Bachelor of Engineering (B.E.)",
+      "Bachelor of Commerce (B.Com)",
+      "Bachelor of Science (B.Sc)",
+      "Bachelor of Arts (B.A)",
+      "Bachelor of Business Administration (BBA)",
+      "Bachelor of Computer Applications (BCA)",
+      "Master of Business Administration (MBA)",
+      "Master of Computer Applications (MCA)",
+      "Master of Technology (M.Tech)",
+      "Master of Commerce (M.Com)",
+      "Master of Science (M.Sc)",
+      "Master of Arts (M.A)",
+      "Diploma",
+      "Higher Secondary Certificate (HSC / Class 12)",
+      "Secondary School Certificate (SSC / Class 10)",
+      "Chartered Accountant (CA)",
+      "Industrial Training Institute (ITI)",
+      "Doctorate (Ph.D.)",
+      "Bachelor of Architecture (B.Arch)",
+      "Bachelor of Pharmacy (B.Pharm)",
+      "Master of Pharmacy (M.Pharm)",
+      "Bachelor of Law (LL.B)",
+      "Master of Law (LL.M)",
+      "Post Graduate Diploma in Management (PGDM)",
+      "Bachelor of Medicine, Bachelor of Surgery (MBBS)",
+      "Diploma in General Nursing and Midwifery (GNM)",
+      "Bachelor of Science in Nursing (B.Sc Nursing)"
+    ],
+    "year_mode": {
+      "Higher Secondary Certificate (HSC / Class 12)": "single_year",
+      "Secondary School Certificate (SSC / Class 10)": "single_year"
+    },
+    "year_mode_note": "Added 2026-08-23 (owner spotted a generated comment showing 'Higher Secondary Certificate (HSC / Class 12) from ZPHS (2022–2026)' - an implausible 4-year span for what is a single board exam, not a multi-year enrollment). Checked real data: of 409 real comments mentioning HSC or SSC, 112 state a single year and precisely ZERO state a year range - the mandatory YEAR_FROM/YEAR_TO pair (correct for degree-type courses, which really do span years) doesn't fit these two qualifications at all. Opt-in metadata, default 'range' for everything else (degrees/diplomas genuinely have a start and end year) - app.js now renders a single 'Year of passing' field for HSC/SSC instead of the two-field pair, and stores the same value into both YEAR_FROM/YEAR_TO under the hood so CommentEngine.php needs no changes. Only applied to HSC/SSC, the two values with direct evidence - Chartered Accountant/ITI could plausibly be similar but weren't checked against real data, so left as 'range' rather than guessed."
+  },
+  "YEAR_FROM": {
+    "type": "free_text",
+    "note": "Added Phase 2 (2026-08-18): owner explicitly corrected an earlier single-year design - 'Not single year, we have to give them range FROM to TO'. Numeric 4-digit year the candidate STARTED this qualification. Mandatory wherever COURSE_NAME is asked; paired with YEAR_TO below, both required together (see YEAR_TO's note for the single-year case)."
+  },
+  "YEAR_TO": {
+    "type": "free_text",
+    "note": "Added Phase 2 (2026-08-18), paired with YEAR_FROM above. Numeric 4-digit year the candidate COMPLETED this qualification. If it was a single-year program, enter the SAME year in both YEAR_FROM and YEAR_TO (CommentEngine collapses an identical from/to into one year rather than showing e.g. '(2019–2019)')."
+  },
+  "ANTECEDENTS": {
+    "type": "dropdown_multi",
+    "note": "Real observed values (Academic year, CGPA, Bonafide/NOC, passing year...) show this is itself a small finite label set for Education — exposed as a dropdown with 'Other' fallback. Converted to multiselect 2026-08-18 (candidate-empathy audit) — a case can genuinely be missing/mismatched on more than one of these at once. Casing normalized same pass (was a mix of Sentence case and lowercase entries — 'course name'/'passing year'/'university name'/'name'/'school branch' were inconsistent with the rest of the list). EXCEPTION: template T59 (Information / Mismatch with verified value) pairs ONE Antecedent against ONE Verified Value 1:1 — the app UI keeps this specific template's Antecedents field single-select even though the tag itself supports multi everywhere else (see public/app.js). REVISED 2026-08-23 (XMind revamp, Step 2): the generic 'Name' value is exactly the gap flagged earlier this session by the 'father name mismatch in HSC document' example (the triage engine had nowhere sensible to route that query, and this list had no way to distinguish whose name). The XMind's own Support Documents -> Name Change Proof -> 'Mismatch between JAF and Document' branch independently confirms the precise split needed: 'Candidate Father Name' and 'Candidate Name' as two distinct real options, not one vague 'Name' bucket. Real-data check: of the ANTECEDENTS-tagged rows carrying plain 'Name', the one sampled example ('as per jaf name is X and as per docs name is Y so name mismatch') was about the CANDIDATE's own name - consistent with keeping a candidate-name option, but the dataset never distinguished a father's-name case explicitly (matches the earlier finding of ~0 real father/mother mismatches in this dataset) - the father's-name option is added on the XMind's direct authority, not independently re-derived from this dataset, since the dataset has no example of it either way. REVISED AGAIN 2026-08-23 (owner spotted a generated Info-Mismatch comment and asked to review this list end to end - 'what are the correct suitable values for Info mismatch only keep them otherwise it wont make sense'): this tag is shared by three templates with genuinely different semantics - T14 'Missing' (what info was NOT PROVIDED - a document like Bonafide/NOC is a perfectly valid answer here) vs T18/T59 'Mismatch' (what field's VALUE conflicts with a record - a document can't 'mismatch', only a stated value can). 'Bonafide/NOC' was showing for Mismatch too, which never made sense; now restricted to T14 only via the new applies_to_templates map below (same absent-is-universal convention as DOCUMENTS' case_types / SPECIAL_INSTRUCTIONS' applies_to_documents). Also merged 'Bachelor's Degree' into 'Education degree' (only 1 real row ever used 'Bachelor's Degree' - T52/Insuff of Rajkiya Engineering College... - and it's the same underlying idea as 'Education degree', which already has its own real example: 'Required correct education degree(UG or Diploma) as the highest completed education is Diploma...'). Renamed 'School branch' to 'Specialization / Branch' after checking all 19 real rows containing the word 'branch' in this dataset: 16 of 19 clearly mean engineering discipline ('Computer Engineering Branch', 'Civil Engineering Branch', 'Electronics and Telecommunication Engineering Branch'), not a physical school/campus location - the old 'School branch' label was itself close to a duplicate of what would have been a separate 'Specialization/Stream' addition, so merged into one clearer value instead of creating a new overlapping one. Added two new values on common-sense grounds (real Education JAF-vs-document mismatches plausibly include these, matching this project's Reason+Solution+Action framework) rather than direct dataset evidence - stated plainly since these are NOT dataset-backed like the values above: 'Percentage / Marks Obtained' (zero literal hits for 'percentage' or 'marks obtained' in the 8,284-row dataset - pure common-sense addition) and 'Grade / Division' (11 real rows / 15 weighted mention 'division' or 'grade', but always as a document qualifier - e.g. 'Require First Division... Application Form' - not as an explicit ANTECEDENTS mismatch extraction, so this is common-sense-plus-partial-evidence, not a confirmed real Mismatch case). ADDED 2026-08-23 (comment-format redesign): 'display_phrases' maps a subset of these values to a fuller reader-facing phrase used ONLY when rendering a bullet in the new listBlock() comment format (see CommentEngine.php) - the dropdown option label itself is unchanged. Two of the six ('Bonafide/NOC' -> 'Bonafide Certificate / No Objection Certificate (NOC)', 'Academic year' -> 'Specific Academic Year') came directly from the owner's own hand-written example of the desired format; the other four (Passing year/CGPA/Education degree/Mode of Qualification) are common-sense extensions of the same style, not independently dataset-confirmed. Values with no entry here render unchanged. SIXTH BATCH (2026-08-26, external review, 4 proposed values, given as Missing-only/Mismatch-only categorization): checked each against this project's existing tags, not just this one, before acting - three of the four turned out to already be covered elsewhere. REJECTED: 'Enrollment / Registration Number' (Missing-only) - already IDENTIFIER_TYPE's dominant real value ('Roll/Registration Number', 3,559 real rows) driving T15 directly; same rejection reasoning as the identical proposal already rejected for VERIFICATION_BLOCKER earlier today. 'Mode of Education (Distance/Regular/Online)' (Missing-only) - already exists, near-verbatim, as CASE_LEVEL_INFORMATION's 'Mode of Education' (used by T51); adding it here too would create a second, redundant route to the same real case via T14 instead. 'Division / Class Awarded' (Mismatch-only) - literal duplicate of this tag's own existing 'Grade / Division' value (added 2026-08-23). ADDED, universal (not Mismatch-only as proposed - the existing, closely analogous 'University name' value isn't template-restricted either, and a college/institute name can plausibly be reported MISSING, not just mismatched, so restricting it to T18/T59 only would be narrower than its own closest precedent): 'College / Affiliated Institute Name' - genuinely distinct from the existing 'University name': captures the real Indian higher-ed pattern where a college is affiliated to a central university and a JAF/document can state either one, causing a mismatch ('Application names a local college; certificate names the central university, or vice-versa') - zero direct real hits in this dataset, added `[O]`.",
+    "applies_to_templates": {
+      "Bonafide/NOC": [
+        "T14"
+      ],
+      "Date of Birth": [
+        "T59"
+      ],
+      "Gender": [
+        "T59"
+      ],
+      "Address": [
+        "T59"
+      ]
+    },
+    "applies_to_templates_note_20260824": "Added Date of Birth/Gender/Address 2026-08-24 (owner-approved dropdown expansion, Information Reason->Scenario rebuild) - restricted to T59 only ('Mismatch - Value vs. Verified Record'), NOT T14 or T18. Reasoning: T14 (Missing) already has DOB/Address covered via CASE_LEVEL_INFORMATION (T51) - adding them here too would just create a second, redundant route to the same real-world case. T18 (Mismatch - Course/Qualification detail) forces COURSE_NAME/VS/YEAR_FROM/YEAR_TO as mandatory context (context_mode: course_vs) - wrong fit for a plain DOB/Gender/Address mismatch that has nothing to do with a course. T59 is context_mode check_only (no course context forced) and already pairs ONE antecedent against ONE verified value via SOURCE_FORM+VERIFIED_VALUE, which is exactly the right shape for 'candidate's stated DOB/Gender/Address doesn't match the verified record.' Not yet confirmed against real classified data - added on Ops common-sense per the owner's explicit request, stated plainly per this project's practice of flagging unconfirmed additions rather than presenting them as dataset-backed like the values above.",
+    "values": [
+      "Bonafide/NOC",
+      "Academic year",
+      "Course name",
+      "Passing year",
+      "CGPA",
+      "University name",
+      "Education degree",
+      "Candidate's Name",
+      "Candidate's Father's Name",
+      "Specialization / Branch",
+      "Mode of Qualification",
+      "Percentage / Marks Obtained",
+      "Grade / Division",
+      "Date of Birth",
+      "Gender",
+      "Address",
+      "College / Affiliated Institute Name"
+    ],
+    "display_phrases": {
+      "Bonafide/NOC": "Bonafide Certificate / No Objection Certificate (NOC)",
+      "Academic year": "Specific Academic Year",
+      "Passing year": "Year of Passing",
+      "CGPA": "CGPA (Cumulative Grade Point Average)",
+      "Education degree": "Education Degree / Qualification Level",
+      "Mode of Qualification": "Mode of Qualification (Full-time / Part-time / Distance)"
+    }
+  },
+  "COST": {
+    "type": "free_text",
+    "note": "Unbounded numeric — never enumerate."
+  },
+  "TOTAL_VER_COST": {
+    "type": "free_text",
+    "note": "Unbounded numeric — never enumerate."
+  },
+  "PRICING_TOOL_COST": {
+    "type": "free_text",
+    "note": "New tag added 2026-08-19 (fifth pass, full-template tag audit) - OPTIONAL breakdown component for T8 (revised total verification cost). Real data: 50 of 73 (68%) T8-resolved comments already state this breakdown inline ('Pricing Tool Cost :-42 / Additional Cost :-14 / Total Verification cost :-56.00') - the base cost from the pricing tool, before any case-specific addition. Optional (not in needed_tags) since ~32% of real cases state only the total; when provided together with ADDITIONAL_COST, CommentEngine appends a breakdown clause so the approver can see why the total is what it is instead of just a bare number.",
+    "unbounded": true
+  },
+  "ADDITIONAL_COST": {
+    "type": "free_text",
+    "note": "New tag added 2026-08-19 (fifth pass, full-template tag audit) - paired with PRICING_TOOL_COST above for T8's optional cost breakdown. The extra amount added on top of the base pricing-tool cost for this specific case (e.g. a manual/field verification surcharge). Optional - only rendered when both this and PRICING_TOOL_COST are provided.",
+    "unbounded": true
+  },
+  "CLIENT_NAME": {
+    "type": "free_text",
+    "note": "Unbounded — client-specific, auto-filled from case context."
+  },
+  "CASE_LEVEL_INFORMATION": {
+    "type": "dropdown_multi",
+    "note": "Real values harvested (Date of Birth dominant at 57 rows). Cleaned + converted to multiselect 2026-08-18 (candidate-empathy audit): merged case-variant duplicates ('Date of Birth'/'Course Name'/'Course name'/'course name' were the same value spelled three ways); split two bundled multi-field entries into atomic values ('address, email id' -> Address + Email ID; 'Full Name, Account Number, Date of Birth, Email, Address, Phone Number' -> Full Name + Account Number + Email + Phone Number, others already present) since multiselect now lets an agent pick several individually instead of needing one pre-bundled combo option; and removed one entry entirely - '<a real personal email address, redacted>' was a real person's email address that had leaked into this dropdown's value list via the original extraction (a data-hygiene bug, not a legitimate category value). UPDATED 2026-08-23 (owner asked 'have you checked with the actual comments?' re: the small Information-category value sets): re-ran extraction across ALL 8,284 rows - most 'not in dropdown' hits were near-duplicates already covered ('College/University name' = University Name/College-Centre Name; 'study campus' = Name of Campus Attended). Two genuinely new, uncovered values found inside one bundled real entry ('Email address, Phone number, Years attended, Student or staff ID, Graduation date') - added 'Graduation Date' and 'Years Attended'. Evidence is thin (1 real row, bundled with 4 other already-covered fields), stated plainly - not independently confirmed at volume the way Date of Birth is.",
+    "values": [
+      "Date of Birth",
+      "Course Name",
+      "College/Centre Name",
+      "University Name",
+      "Address",
+      "Email ID",
+      "Phone Number",
+      "Full Name",
+      "Account Number",
+      "JAF",
+      "Highest Completed Education Details",
+      "Name of Campus Attended",
+      "Mode of Education",
+      "Certificate Verification Link",
+      "Graduation Date",
+      "Years Attended",
+      "Nationality",
+      "Board/Affiliation (CBSE/State Board/ICSE, etc.)",
+      "Alternate/Emergency Contact Number",
+      "Photograph",
+      "Candidate's Maiden Name / Pre-Marriage Name",
+      "Mother's Name",
+      "University Registration / Enrollment Year"
+    ],
+    "step_20260826_additions_note": "Added 2026-08-26 (external review, 4 proposed values, checked against real data and every other tag before acting): 'Candidate's Maiden Name / Pre-Marriage Name' and 'Mother's Name' added `[O]` - zero real hits, but both genuinely distinct from every existing value here (no near-duplicate of 'Full Name'/'Candidate's Father's Name') and real, common BGV patterns (female candidates' degree records under a maiden surname; Indian state university registrars often indexing by mother's name alongside the candidate's own). 'University Registration / Enrollment Year' added `[O]` - distinct from ANTECEDENTS' 'Passing year' and this tag's own 'Graduation Date' (both about COMPLETION; this is about the START/enrollment year, useful when a passing year alone returns multiple ledger matches). REJECTED: 'Specialization / Major Discipline' - already exists, near-verbatim, as ANTECEDENTS' 'Specialization / Branch' (used by T14); adding a second copy here would create a redundant parallel route to the same real case via T51 instead, the same class of problem already avoided twice today (see ANTECEDENTS' and VERIFICATION_BLOCKER's own 2026-08-26 notes).",
+    "step_20260824_additions_note": "Added 2026-08-24 (owner-approved dropdown expansion, Information Reason->Scenario rebuild): 'Nationality', 'Board/Affiliation (CBSE/State Board/ICSE, etc.)', 'Alternate/Emergency Contact Number', 'Photograph'. None of these have real dataset hits under this project's own 8,284-row corpus - added on Ops common-sense grounds only, per the owner's explicit request ('use your general knowledge, think from an Operations guy'), stated plainly rather than presented as dataset-confirmed like the values above. Note 'Candidate's Address' was considered but NOT added as a new value - it's already covered by the existing plain 'Address' value in this same list.",
+    "step4_additions_note": "Added 2026-08-23 (XMind revamp, Step 4). 'Mode of Education' - the literal phrase has 0 real hits, but the underlying values it would describe are strongly evidenced across the dataset: 'Full time' (302 weighted mentions), 'Distance' (22), 'Regular' (12), 'Correspondence' (6), 'Part time' (5) - the same pattern as 'Graduation or above' earlier this project (a real, common concept that just wasn't captured under this exact field name). Judgment call, stated plainly: those real mentions mostly appear as a qualifier describing the COURSE being verified ('Require Full time, BE, ...'), not explicitly framed as 'this information is missing' the way T51's other CASE_LEVEL_INFORMATION values are - the XMind places it under Information/Missing regardless, so it's added here on that basis, but this is a genuine judgment call, not a clean real-data match like the DOCUMENTS additions in Step 3. 'Certificate Verification Link' has 1 real hit ('Require online certificate link/verification link/online certificate credential for the verification...', historically classified under T17 Portal Action) - arguably that historical row fits 'missing information' better than 'do an action on a portal' (it's asking to be GIVEN a link, not told to go use one), but that's a pre-existing historical classification, not something changed by this addition - flagged, not silently reclassified."
+  },
+  "FORM_COMPANY_NAME": {
+    "type": "system_constant",
+    "note": "Always 'AuthBridge Research Services Pvt. Ltd.' per real data (36/36 rows). Never shown as a dropdown/input — auto-injected.",
+    "value": "AuthBridge Research Services Pvt. Ltd."
+  },
+  "NO_OF_DAYS": {
+    "type": "free_text",
+    "note": "Unbounded numeric."
+  },
+  "PORTAL_NAME": {
+    "type": "dropdown_free_hybrid",
+    "note": "Small real list observed (HEDD, Parchment, Sunderland, My eQuals...) — dropdown with Other fallback. Cleaned 2026-08-18: merged 'hedd'/'Hedd' duplicate case variants into one canonical 'HEDD' entry (Higher Education Degree Datacheck, the portal's own acronym). SEVENTH BATCH (2026-08-26, external review, 5 proposed values): checked each against search_index.json - only 'DigiLocker / NAD' has any direct real support (1 row/2 weighted mentions Digilocker as the verification channel); the other 4 have zero real hits, consistent with this tag's existing list (Greenwich/Sunderland/My eQuals also have no confirmed dataset hits - this is a small reference list of known real portals built on domain knowledge, not purely data-mined). Added all 5 `[O/D]`, none duplicating an existing entry or each other: 'National Student Clearinghouse (NSC)', 'DigiLocker / NAD (National Academic Depository)' `[D weak]`, 'WES (World Education Services)', 'Qualification Check', 'Truecopy'. Note: 'DigiLocker/university portal' already appears as an illustrative example inside an existing SPECIAL_INSTRUCTIONS value ('Downloaded directly from the issuing portal...') - not a duplicate, since that value is a document-handling instruction and this is a distinct portal-name picklist entry for naming which verification portal a check goes through.",
+    "values": [
+      "HEDD",
+      "Greenwich",
+      "Parchment",
+      "Sunderland",
+      "My eQuals",
+      "National Student Clearinghouse (NSC)",
+      "DigiLocker / NAD (National Academic Depository)",
+      "WES (World Education Services)",
+      "Qualification Check",
+      "Truecopy"
+    ]
+  },
+  "PORTAL_URL": {
+    "type": "free_text",
+    "note": "Unbounded — paired with PORTAL_NAME, auto-filled from a portal->URL lookup where known."
+  },
+  "CONTACT_ROLE": {
+    "type": "dropdown_free_hybrid",
+    "note": "Real values: Placement coordinator, point of contact, TPO. TWELFTH BATCH (2026-08-26, external review, 4 proposed values): the original 4 values skew Indian-college/placement-office-specific; checked the 4 proposed additions against real data and found supporting (if not exact-phrase) evidence for 2 of them - 'registrar' appears in real contact-role context ('bears the registrar's signature', 'as per registrar they required...') and 'Vice Principal' appears once in a real T6 row ('The current Vice Principal, Mr. Chathura, informed us that the records...') - substantiating the broader 'Principal/Dean' role concept even without that exact title. All 4 added `[O]`, since each names a genuinely distinct institutional role not covered by the existing 4 (which skew toward placement/coordination staff, not academic-records administration): 'Registrar / Controller of Examinations', 'Verification Cell / Third-Party Coordinator', 'Principal / Dean of Academic Affairs', 'Archives / Records Department'.",
+    "values": [
+      "Placement coordinator",
+      "point of contact",
+      "TPO",
+      "candidate",
+      "Registrar / Controller of Examinations",
+      "Verification Cell / Third-Party Coordinator",
+      "Principal / Dean of Academic Affairs",
+      "Archives / Records Department"
+    ]
+  },
+  "CONTACT_CHANNEL": {
+    "type": "free_text",
+    "note": "Email/phone value — unbounded."
+  },
+  "CONTACT_OUTCOME": {
+    "type": "dropdown",
+    "note": "Not enough real samples to harvest confidently; drafted from template context pending owner review. SEVENTH BATCH (2026-08-26, external review, 4 proposed values): checked each against search_index.json and against T44's sentence shape ('The <CONTACT_CHANNEL>...<CONTACT_OUTCOME>'). ADDED 3 of 4, all `[O]` (weak-to-zero direct evidence, but each a genuinely distinct outcome not covered by the existing 4): 'mailbox is full or auto-replying with a delay notice' (zero real hits, plausible distinct technical outcome), 'the institute has requested postal mail or a physical application instead' (1 real row/2 weighted supports a channel-switch-demanded scenario, though not in this exact wording), 'the institute/department is closed (permanently or for a holiday period)' (2 real rows/3 weighted directly support an institute-closed outcome, one exactly this concept - 'institute is permanently closed'). REJECTED: 'refused to verify without candidate consent / fee payment' - zero real hits for this as a CONTACT-channel outcome, and the underlying concept (institute wants consent/fee before proceeding) is already covered by the existing VERIFICATION_BLOCKER fee-pending value plus the Consent form/Authorization form DOCUMENTS values and their hand-signed Special Instruction - adding it here too would create a redundant parallel route through a different template.",
+    "values": [
+      "is unreachable",
+      "is invalid / disconnected",
+      "did not respond after multiple attempts",
+      "bounced back / does not exist",
+      "mailbox is full or auto-replying with a delay notice",
+      "the institute has requested postal mail or a physical application instead",
+      "the institute/department is closed (permanently or for a holiday period)"
+    ]
+  },
+  "VERIFICATION_LOCATION": {
+    "type": "free_text",
+    "note": "Unbounded address/location."
+  },
+  "VISIT_REASON": {
+    "type": "dropdown",
+    "note": "New tag added 2026-08-19 (sixth pass, owner review: 'why the final comment doesn't contain a reason part') for T42 (Action Required / Visit within deadline). Real data: 8 of 8 (100%) T42-resolved comments state WHY the in-person visit is needed, not just what to bring - 'the candidate's record not found in the University', 'due to the unavailability of records in the university', 'as per the letterhead response' - clustered into 3 recurring real reasons plus a fallback. Mandatory (not optional) since every real row states one; rendered as a lead-in sentence before the where/when/what, restoring the Reason element of this project's Reason+Solution+Action framework that VISIT_DOCUMENTS alone didn't fix. SEVENTH BATCH (2026-08-26, external review, 3 proposed values): checked each against search_index.json. ADDED 2 of 3, both `[O]` (weak-to-zero direct evidence but genuinely distinct from the existing 3): 'the institute's digital contact channels (email/phone) are non-functional' (1 real row/1 weighted - 'Institute website not working, no contact no. email id found' - directly supports a broken-digital-channel visit trigger, distinct from records-not-located or letterhead-demands-visit), 'the institute requires physical fee payment at the verification counter' (zero direct hits, but plausible and distinct - complements the fee-related VERIFICATION_BLOCKER/CLIENT_ACTION values added in earlier batches). REJECTED: 'archive record search required for pre-digital era degrees (prior to 2000s)' - the initial 'legacy record' grep match was a false positive (matched an unrelated 'manually signed consent form' comment, not an archive-search scenario); zero real evidence, and the concept is already substantially covered by the existing 'records could not be located or verified through mail or the online portal' value - adding a narrower reason for WHY records aren't found digitally (pre-digital era) would be a redundant refinement of an existing value, not a genuinely new visit trigger.",
+    "values": [
+      "The institute's records could not be located or verified through mail or the online portal.",
+      "The institute's letterhead response indicated that an in-person visit is required.",
+      "The institute requires the candidate to apply for verification in person.",
+      "The institute's digital contact channels (email/phone) are non-functional.",
+      "The institute requires physical fee payment at the verification counter.",
+      "Other / not specified."
+    ]
+  },
+  "VISIT_DOCUMENTS": {
+    "type": "dropdown_multi",
+    "note": "New tag added 2026-08-19 (fifth pass, full-template tag audit) for T42 (Action Required / Visit within deadline) - the original documents the candidate must physically carry to the in-person visit. Real data: 8 of 8 (100%) T42-resolved comments explicitly list which original documents to bring ('visit the university with original degree, consolidated marksheet and Aadhar card') - information the old template completely omitted, telling the candidate WHERE and BY WHEN to visit but never WHAT to bring. Deliberately kept as its own tag rather than reusing DOCUMENTS directly: DOCUMENTS drives the dual-bucket Mandatory/Any-one-of document-builder mechanism used by Document-category templates (with its own combined-sentence override), which doesn't fit an in-person-visit checklist - real data never showed an OR-alternative for this scenario, just a plain AND-joined list of originals to carry. Reuses the same real document names as the DOCUMENTS atomic list for consistency. EXPANDED 2026-08-26 (external review, 4 proposed values): checked each against real data and against this project's atomic-value conventions before acting. 'Government-issued Photo ID (Passport/Voter ID/Driver's License)' - rejected as proposed (a bundled 'X/Y/Z' value would violate the atomic-value rule this project has enforced since the DOCUMENTS redesign); redirected to adding 'Passport with Photo & Signature', which already exists as an atomic DOCUMENTS value (16 weighted real hits found for govt-photo-ID-adjacent requests) but had never been carried over into this tag's own list - Voter ID/Driver's License have zero real evidence and aren't yet atomic DOCUMENTS values anywhere in this project, so not invented here. 'Migration/Transfer Certificate (Original)' - both 'Migration Certificate' and 'Transfer Certificate' already exist as atomic DOCUMENTS values (the latter added 2026-08-21, the former added earlier today) but were likewise never carried into this tag's list - added both, consistent with this tag's own reuse-DOCUMENTS-names convention. 'Official Authorization Letter from Candidate (Signed physical copy)' - added as 'Signed physical Authorization Letter' (4 weighted real rows support authorization-letter documents being real, e.g. 'must include a valid government-issued ID and a signed authorization letter', though not specifically tied to an in-person-visit scenario). 'Fee Payment Proof / Bank Challan Receipt' - added `[O]`, zero direct real evidence, but plausible and complements the 'Verification fee payment pending from the candidate' VERIFICATION_BLOCKER value added earlier today.",
+    "values": [
+      "Degree",
+      "All year marksheets",
+      "Final year marksheet",
+      "Provisional Certificate",
+      "Highest Passing Education Marksheet",
+      "Higher Secondary Certificate (HSC)",
+      "Consolidated marksheet",
+      "Aadhaar card",
+      "HEDD consent form",
+      "Consent form",
+      "Original school document",
+      "Passport with Photo & Signature",
+      "Migration Certificate",
+      "Transfer Certificate",
+      "Signed physical Authorization Letter",
+      "Fee payment proof / bank challan receipt"
+    ]
+  },
+  "VERIFIED_VALUE": {
+    "type": "free_text",
+    "note": "Auto-filled from the system's own verified record, never user-entered."
+  },
+  "SOURCE_FORM": {
+    "type": "dropdown",
+    "note": "New tag added 2026-08-19 (fifth pass, full-template tag audit) for T59 (Information / Mismatch - Verified Value on File). Real data: 4 of 6 T59-resolved comments explicitly name the source form the conflicting value came from ('Insuff of updated JAF as there is a mismatch of university name', '...(As per EAF)', '...(as Per Supporting Document)') - the old template said only 'The <ANTECEDENTS> provided', never saying WHICH form/record stated it, leaving the reader to guess whether to correct the JAF, the EAF, or something else. 'Other / not specified' kept as a fallback for the 2 rows that didn't name one, so this stays a required field without blocking genuinely unclear cases. SEVENTH BATCH (2026-08-26, external review, 3 proposed values): checked each against search_index.json. ADDED: 'Resume / CV' `[D]` - 2 real rows/4 weighted explicitly show a candidate's CV/Resume as the source of a stated qualification, genuinely distinct from JAF/EAF/CDF (a candidate-authored document, not an AuthBridge-issued form). ADDED: 'DigiLocker / Government Portal Record' `[O/D weak]` - 1 real row/2 weighted references Digilocker as a source, though the example is ambiguous between naming a source-form and naming a document-retrieval channel; kept since it names a genuinely different KIND of source (a government digital record, not a form the candidate filled in) than any existing value. REJECTED: 'Background Verification Form (BGVF)' - zero real hits, and it's a generic synonym for the already-covered generic 'Application Form' value - no evidence it names something distinct.",
+    "values": [
+      "Job Application Form (JAF)",
+      "Employment Application Form (EAF)",
+      "Candidate Data Form (CDF)",
+      "Application Form",
+      "Candidate-provided information",
+      "Resume / CV",
+      "DigiLocker / Government Portal Record",
+      "Other / not specified"
+    ]
+  },
+  "SOURCE_DOCUMENT": {
+    "type": "free_text",
+    "note": "Unbounded — the specific doc that was rejected; auto-filled from case context."
+  },
+  "SOURCE_ACTION": {
+    "type": "free_text",
+    "note": "Only 1 real sample observed — too thin to enumerate confidently; free text pending more data."
+  },
+  "PORTAL_ACTION": {
+    "type": "free_text",
+    "note": "Only 1 real sample observed — free text pending more data. UPDATED 2026-08-19 (fifth pass, full-template tag audit): now also wired into T17 (course_vs Portal Action) - previously T17 said only 'complete the pending verification action', discarding the actual instruction entirely. Real T17 data (11 rows) shows this matters a lot: 'register on the Digital Certificates Platform and give a third-party access to view qualifications', 'share electronic documents via Parchment', 'access official documents via ul.ie/verify' - each materially different from the others, none inferable from PORTAL_NAME/PORTAL_URL alone."
+  },
+  "REFERENCE_URL": {
+    "type": "free_text",
+    "note": "Unbounded URL."
+  },
+  "VALIDITY_PERIOD": {
+    "type": "free_text",
+    "note": "Unbounded duration text (e.g. '6 months')."
+  },
+  "COST_APPROVAL_CONFIG": {
+    "type": "free_text",
+    "note": "Blocked tag per Session 4 finding — no real value list exists; free text until resolved."
+  },
+  "REVIEW_REASON": {
+    "type": "dropdown_multi",
+    "converted_to_multiselect_note": "Converted from dropdown_free_hybrid to dropdown_multi 2026-08-24 (owner: 'give multiselect options wherever required, if not now in future they may require so think that way as well'). A review can genuinely be flagged for more than one simultaneous reason (e.g. both a Suspect Positive Response AND TAT running low) - T69's optimized_text ('Review raised for {CHECK_NAME} - {REVIEW_REASON}.') already reads correctly with joinList()'s 'X and Y' output, no template text change needed. No CommentEngine.php change needed - same generic array-join as IDENTIFIER_TYPE above.",
+    "note": "New tag for T69 (Phase 4, 2026-08-18) - built to cover the 'Review Raised' template family found in Actual_To_Atomic_Mapping.xlsx's Not Captured sheet (10 real rows, e.g. 'Review Raised for Suspect Positive Response', 'Review raised. Response time is high, Less TAT'). The raw real comments often gave NO reason at all ('Review raised. Please check and confirm.') - rather than ship that ambiguity forward, this tag is MANDATORY so T69 always states a concrete why, per the project's Reason+Solution+Action framework. SEVENTH BATCH (2026-08-26, external review, 3 proposed values): checked each against search_index.json and against every other tag. ADDED 2 of 3: 'Institute may be unrecognized or unaccredited (possible diploma mill)' `[D]` - 19 real rows/21 weighted support the underlying non-recognition concept; not a duplicate of VERIFICATION_BLOCKER's near-identical 'Institute is not recognized by the verifying body', since that value drives T6/T13/T60/T63's document-rejection reasoning, while this drives T69's separate review-escalation-trigger use case - the same real-world fact can legitimately flag two different template outcomes. 'Multiple verification requests submitted under different candidate names' `[D]` - 2 real rows/2 weighted directly support this (one is the exact row already cited as evidence for INVALID_REASON's 'belongs to a different candidate / record' in an earlier batch) - again not a duplicate, since INVALID_REASON states a specific field is wrong (T72), while this flags WHY a review was escalated in the first place (T69), a genuinely different template purpose for the same underlying fact. REJECTED: 'Font / Format Discrepancy on Submitted Document' - zero real hits, and too close to the existing 'Document appears to be tampered or altered' concept in VERIFICATION_BLOCKER (both describe the same anti-fraud suspicion, just phrased as a milder 'discrepancy' vs. a stronger 'tampered' finding) with no real evidence to justify treating it as a genuinely separate signal.",
+    "values": [
+      "Suspect Positive Response flagged during verification",
+      "Institute/employer appears on a suspect list",
+      "Response time is high — TAT running low",
+      "General review requested — no specific system flag",
+      "Institute may be unrecognized or unaccredited (possible diploma mill)",
+      "Multiple verification requests submitted under different candidate names"
+    ]
+  },
+  "FIELD_NAME": {
+    "type": "dropdown_free_hybrid",
+    "note": "New tag for T70/T71 (Phase 4, 2026-08-18) - the specific case field an antecedent-check flagged. Real examples: 'Course Name / Qualification' (T70, 10 rows) and 'Period of Education' (T71, 8 rows), both from Actual_To_Atomic_Mapping.xlsx's Not Captured sheet. EXPANDED 2026-08-24 (owner-approved dropdown expansion, Information Reason->Scenario rebuild): added 'CGPA / Percentage', 'Years Attended' (both now selectable for T71's 'Below Required Minimum' scenario - e.g. 'CGPA below the required minimum'), and 'Address', 'Identifier Number', 'Verification Portal Link' (all three now selectable for new template T72's 'Wrong / Invalid - Other Detail' scenario). None of these 5 additions have real dataset hits - added on Ops common-sense grounds per the owner's explicit request, stated plainly rather than presented as dataset-confirmed like the original 2 examples above. Reused this existing tag rather than creating a new one since FIELD_NAME already has the right generic shape (dropdown_free_hybrid with an Other escape hatch) and is already read by CommentEngine.php's generic tag-substitution loop with zero special-casing. NINTH BATCH (2026-08-26, external review, 4 proposed values): checked each against real data AND against every other tag before acting - 3 of the 4 turned out to already be covered by an existing value, either in this tag or elsewhere in the system for the exact same real scenario. ADDED: 'Specialization / Major' (8 real rows/10 weighted confirm 'specialization' is a real course-name qualifier in this dataset; genuinely distinct granularity from the existing 'Course Name / Qualification', mirroring the same distinction already established for ANTECEDENTS' 'Course name' vs 'Specialization / Branch'). REJECTED: 'Affiliated College Name' - redundant with this tag's own already-generic 'Institute Name', which already lets an agent name a College-vs-University conflict via VALUE1/VALUE2 free text without needing a separate picklist entry (unlike ANTECEDENTS, which had no generic 'Institute Name' option and genuinely needed 'College / Affiliated Institute Name' added separately from its narrower 'University name'). 'Mode of Education' - the MISMATCH scenario this describes (candidate states Full-time, record shows Distance) is already fully served by ANTECEDENTS' existing 'Mode of Qualification' (display-phrased as 'Full-time / Part-time / Distance', usable via T18/T59) - adding it here too would create a redundant parallel route to the same real case. 'Graduation / Passing Month and Year' - the existing 'Passing Year' already covers this field conceptually, and any month-level granularity is already expressible in VALUE1/VALUE2's free text (e.g. 'March 2020' vs 'June 2022') without needing a separate FIELD_NAME entry.",
+    "values": [
+      "Course Name / Qualification",
+      "Period of Education",
+      "Degree Type",
+      "Institute Name",
+      "Passing Year",
+      "CGPA / Percentage",
+      "Years Attended",
+      "Address",
+      "Identifier Number",
+      "Verification Portal Link",
+      "Specialization / Major"
+    ]
+  },
+  "INVALID_REASON": {
+    "type": "dropdown_free_hybrid",
+    "note": "New tag for T72 (2026-08-24, owner-approved dropdown expansion, Information Reason->Scenario rebuild) - describes HOW a provided field is wrong/invalid, paired with FIELD_NAME (which field). Not yet confirmed against real classified data - built on Ops common-sense per the owner's explicit request to add 'Wrong / Invalid' scenario values beyond T44's contact-specific case (address/institute-name/course-name/identifier/portal-link issues), stated plainly per this project's practice of flagging unconfirmed additions. TENTH BATCH (2026-08-26, external review, 4 proposed values): zero real hits for any of the 4, but all are genuinely distinct failure modes not covered by the existing 4 - added `[O]`: 'is expired or past validity date' (time-bound documents like professional licenses), 'is incomplete / missing mandatory digits' (e.g. a truncated identifier - 6 digits submitted where 10 are required; distinct from the DOCUMENT-category INCOMPLETE_DETAIL tag, since this describes a stated INFORMATION value being incomplete, not a submitted document), 'belongs to a different candidate / record' (distinct from the existing 'does not match any real/existing record' - that means no record was found at all, this means a record WAS found but under someone else's identity; 1 real row elsewhere in the dataset - 'candidate has uploaded degree with 2 different candidate names' - confirms this is a genuine real scenario type, if not this exact phrasing), 'is unverified on official portal / domain' (distinct from the existing 'is not accessible or functional' - that means the link/portal itself is broken, this means the link works but the verification code entered fails validation).",
+    "values": [
+      "is in the wrong format",
+      "does not match any real/existing record",
+      "is not accessible or functional (e.g. a broken link)",
+      "contains invalid characters",
+      "is expired or past validity date",
+      "is incomplete / missing mandatory digits",
+      "belongs to a different candidate / record",
+      "is unverified on official portal / domain"
+    ]
+  },
+  "VALUE1": {
+    "type": "free_text",
+    "note": "New tag for T70 (Phase 4, 2026-08-18) - the first of two conflicting values found for FIELD_NAME across case sources (e.g. 'Diploma'). Unbounded."
+  },
+  "VALUE2": {
+    "type": "free_text",
+    "note": "New tag for T70 (Phase 4, 2026-08-18) - the second of two conflicting values found for FIELD_NAME across case sources (e.g. 'Certificate'). Unbounded."
+  },
+  "THRESHOLD": {
+    "type": "free_text",
+    "note": "New tag for T71 (Phase 4, 2026-08-18) - the minimum expected value FIELD_NAME fell short of (e.g. '2 Years', from the real example 'Period of Education Antecedent Value Less than 2 Years'). Unbounded."
+  }
+}

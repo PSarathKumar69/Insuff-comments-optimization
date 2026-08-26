@@ -1,0 +1,1193 @@
+[
+  {
+    "id": "T1",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Candidate Non-Cooperation",
+    "reason_sub_type": "Declined to share",
+    "raw_text": "The candidate has declined to share <DOCUMENTS> required for <CHECK_NAME>. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "CHECK_NAME",
+      "CLIENT_ACTION"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The candidate has declined to share <DOCUMENTS> required for <CHECK_NAME>. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION",
+      "DOCUMENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Candidate Non-Cooperation",
+      "reason_detail": "Declined to share",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T2",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Candidate Non-Cooperation",
+    "reason_sub_type": "Confirmed not available",
+    "raw_text": "The candidate has confirmed that <DOCUMENTS> required for <CHECK_NAME> is not available. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "CHECK_NAME",
+      "CLIENT_ACTION"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The candidate has confirmed that <DOCUMENTS> required for <CHECK_NAME> is not available. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION",
+      "DOCUMENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Candidate Non-Cooperation",
+      "reason_detail": "Confirmed not available",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T3",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Candidate Non-Cooperation",
+    "reason_sub_type": "Left organization",
+    "raw_text": "The candidate has left the organization. Kindly confirm whether we should <CLIENT_ACTION> for <CHECK_NAME>.",
+    "raw_tags": [
+      "CLIENT_ACTION",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The candidate has left the organization. Kindly confirm whether we should <CLIENT_ACTION> for <CHECK_NAME>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Candidate Non-Cooperation",
+      "reason_detail": "Left organization",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T4",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Candidate Non-Cooperation",
+    "reason_sub_type": "Will not join",
+    "raw_text": "The candidate has confirmed that they will not join the organization. Kindly confirm whether we should <CLIENT_ACTION> for <CHECK_NAME>.",
+    "raw_tags": [
+      "CLIENT_ACTION",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The candidate has confirmed that they will not join the organization. Kindly confirm whether we should <CLIENT_ACTION> for <CHECK_NAME>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Candidate Non-Cooperation",
+      "reason_detail": "Will not join",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T5",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Candidate Non-Cooperation",
+    "reason_sub_type": "Non-responsive",
+    "raw_text": "The candidate did not respond after the configured number of attempts for <CHECK_NAME>. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "raw_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The candidate did not respond after the configured number of attempts for <CHECK_NAME>. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Candidate Non-Cooperation",
+      "reason_detail": "Non-responsive",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T6",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Candidate Non-Cooperation",
+    "reason_sub_type": "Verification blocked",
+    "raw_text": "Verification cannot proceed for <CHECK_NAME> because <VERIFICATION_BLOCKER>. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "raw_tags": [
+      "CHECK_NAME",
+      "VERIFICATION_BLOCKER",
+      "CLIENT_ACTION"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "Verification cannot proceed for <CHECK_NAME> because <VERIFICATION_BLOCKER>. Kindly confirm whether we should <CLIENT_ACTION>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_ACTION",
+      "VERIFICATION_BLOCKER"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Candidate Non-Cooperation",
+      "reason_detail": "Verification blocked",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T7",
+    "merged_from": [],
+    "insuff_category": "Cost Approval",
+    "reason_category": "N/A",
+    "reason_sub_type": "N/A",
+    "raw_text": "Kindly approve the additional verification cost of <CURRENCY> <COST> for <CHECK_NAME>.",
+    "raw_tags": [
+      "CURRENCY",
+      "COST",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": "Additional Verification Cost - On Top of an Already-Approved Cost",
+    "optimized_text": "Kindly approve the additional verification cost of <CURRENCY> <COST> for <CHECK_NAME>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "COST",
+      "CURRENCY"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Cost Approval",
+      "reason_step_shown": false,
+      "reason": null,
+      "reason_detail": "Additional Verification Cost - On Top of an Already-Approved Cost",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T8",
+    "merged_from": [],
+    "insuff_category": "Cost Approval",
+    "reason_category": "N/A",
+    "reason_sub_type": "N/A",
+    "raw_text": "Kindly approve the revised total verification cost of <CURRENCY> <TOTAL_VER_COST> for <CHECK_NAME>.",
+    "raw_tags": [
+      "CURRENCY",
+      "TOTAL_VER_COST",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": "Revised total verification cost",
+    "optimized_text": "Kindly approve the revised total verification cost of <CURRENCY> <TOTAL_VER_COST> for <CHECK_NAME>.",
+    "reason_clause_added": "cost.revised_total (fifth pass, 2026-08-19, full-template tag audit): 50 of 73 (68%) real T8-resolved comments already state a cost breakdown inline ('Pricing Tool Cost :-42 / Additional Cost :-14 / Total Verification cost :-56.00') that the old template discarded, leaving the approver a bare total with no way to see why it changed. Added optional PRICING_TOOL_COST/ADDITIONAL_COST tags (see optional_tags below) - CommentEngine appends a breakdown clause automatically when both are provided, falls back to the plain total-only sentence otherwise (kept optional rather than mandatory since ~32% of real cases genuinely state only the total).",
+    "needed_tags": [
+      "CHECK_NAME",
+      "CURRENCY",
+      "TOTAL_VER_COST"
+    ],
+    "optional_tags": [
+      "PRICING_TOOL_COST",
+      "ADDITIONAL_COST"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Cost Approval",
+      "reason_step_shown": false,
+      "reason": null,
+      "reason_detail": "Revised total verification cost",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T9",
+    "merged_from": [
+      "T37"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Missing",
+    "raw_text": "Kindly provide <DOCUMENTS> for <COURSE_NAME> from <VS>.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "To complete the verification for {CONTEXT}, please provide the {DOCUMENTS}.",
+    "special_instructions_format": "document_requirements",
+    "reason_clause_added": "document.missing[2026-08-18 fourth fix: merged with retired T37 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T37-resolved comments actually did reference a specific course.][2026-08-26: optimized_text and special_instructions_format changed per owner instruction - candidate-facing text should not say \"the case\", and Special Instructions should render as a headed \"Document Requirements:\" bulleted block instead of an inline \"Please ensure the copy is: X and Y.\" sentence. Scoped to T9 only for now - see CLAUDE.md's matching addendum.]",
+    "needed_tags": [
+      "DOCUMENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Missing",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T10",
+    "merged_from": [
+      "T45"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Blurred/Illegible",
+    "raw_text": "The copy of <DOCUMENTS> submitted for <COURSE_NAME> from <VS> is blurred or unreadable. Kindly provide a clear and readable copy.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The copy of <DOCUMENTS> submitted for <CONTEXT> is blurred or unreadable. Kindly provide a clear and readable copy.",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): was substituting literal <COURSE_NAME> from <VS>, bypassing the shared CONTEXT placeholder entirely, so the qualification/year detail added in Phase 2 never actually rendered here despite being a required field. Now uses <CONTEXT> like every other course_vs template.[2026-08-18 fourth fix: merged with retired T45 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T45-resolved comments actually did reference a specific course.]",
+    "needed_tags": [
+      "DOCUMENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Blurred/Illegible - Scanned copy is blurred or unreadable",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T11",
+    "merged_from": [
+      "T46"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Incomplete",
+    "raw_text": "The copy of <DOCUMENTS> submitted for <COURSE_NAME> from <VS> is incomplete or partially visible. Kindly provide a complete copy.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The copy of <DOCUMENTS> submitted for <CONTEXT> is incomplete or partially visible. Kindly provide a complete copy.",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): see T10's note - same CONTEXT-bypass bug, same fix.[2026-08-18 fourth fix: merged with retired T46 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T46-resolved comments actually did reference a specific course.]",
+    "needed_tags": [
+      "DOCUMENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Incomplete - Document is incomplete or partially visible",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T12",
+    "merged_from": [
+      "T47"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Expired",
+    "raw_text": "The <DOCUMENTS> submitted for <COURSE_NAME> from <VS> has expired. Kindly provide a valid and current copy.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The copy of <DOCUMENTS> submitted for <CONTEXT> has expired. Kindly provide a valid and current copy.",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): see T10's note - same CONTEXT-bypass bug, same fix.[2026-08-18 fourth fix: merged with retired T47 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T47-resolved comments actually did reference a specific course.]",
+    "needed_tags": [
+      "DOCUMENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Expired - Document has expired",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T13",
+    "merged_from": [
+      "T57"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Wrong/Rejected",
+    "raw_text": "The <DOCUMENTS> submitted for <COURSE_NAME> from <VS> cannot be accepted because <VERIFICATION_BLOCKER>. Kindly provide an acceptable copy.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "COURSE_NAME",
+      "VS",
+      "VERIFICATION_BLOCKER"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The copy of <DOCUMENTS> submitted for <CONTEXT> cannot be accepted because <VERIFICATION_BLOCKER>. Kindly provide an acceptable copy.",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): see T10's note - same CONTEXT-bypass bug, same fix. VERIFICATION_BLOCKER converted to multiselect this same pass - safe here since it sits in a trailing \"because X\" clause, which reads fine whether one or several reasons are AND-joined.[2026-08-18 fourth fix: merged with retired T57 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T57-resolved comments actually did reference a specific course.]",
+    "needed_tags": [
+      "DOCUMENTS",
+      "VERIFICATION_BLOCKER"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Wrong/Rejected - Document cannot be accepted",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T14",
+    "merged_from": [
+      "T40"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Missing",
+    "raw_text": "Kindly provide <ANTECEDENTS> for <COURSE_NAME> from <VS>.",
+    "raw_tags": [
+      "ANTECEDENTS",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The following information for {CONTEXT} was not provided with the case: {ANTECEDENTS}. Kindly share this information for verification.",
+    "reason_clause_added": "information.missing (restructured 2026-08-18: ANTECEDENTS converted to multiselect this pass, so the sentence subject is now the invariant \"the following information\" instead of {ANTECEDENTS} itself - avoids a was/were agreement break when 2+ values are selected)[2026-08-18 fourth fix: merged with retired T40 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T40-resolved comments actually did reference a specific course.]",
+    "needed_tags": [
+      "ANTECEDENTS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Missing - Course / Qualification detail",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    },
+    "list_block": {
+      "tag": "ANTECEDENTS",
+      "lead_in": "To complete the verification for {CONTEXT}, please provide the following missing details:"
+    }
+  },
+  {
+    "id": "T15",
+    "merged_from": [
+      "T41"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Missing - Identifier Number",
+    "raw_text": "Kindly provide the <IDENTIFIER_TYPE> for <COURSE_NAME> from <VS>.",
+    "raw_tags": [
+      "IDENTIFIER_TYPE",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The {IDENTIFIER_TYPE} for {CONTEXT} was not provided with the case. Kindly share this information for verification.",
+    "reason_clause_added": "information.missing_identifier[2026-08-18 fourth fix: merged with retired T41 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T41-resolved comments actually did reference a specific course.][2026-08-24: IDENTIFIER_TYPE converted to multiselect (tag_values.json) - 'share this identifier' reworded to 'share this information' so the closing sentence reads correctly whether one or several identifier types are selected.]",
+    "needed_tags": [
+      "IDENTIFIER_TYPE"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Missing - Identifier Number",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T17",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Action Required",
+    "reason_sub_type": "Portal Action",
+    "raw_text": "Please complete the pending verification action for <COURSE_NAME> from <VS> on <PORTAL_NAME> using <PORTAL_URL>.",
+    "raw_tags": [
+      "COURSE_NAME",
+      "VS",
+      "PORTAL_NAME",
+      "PORTAL_URL"
+    ],
+    "context_mode": "course_vs",
+    "scenario_label": null,
+    "optimized_text": "Please <PORTAL_ACTION> on <PORTAL_NAME> using <PORTAL_URL> to complete verification for <CONTEXT>.",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): see T10's note - same CONTEXT-bypass bug, same fix.[Fifth pass, 2026-08-19, full-template tag audit: added PORTAL_ACTION - the old text said only 'complete the pending verification action', discarding the actual instruction entirely. Real data (11 rows) shows this varies a lot and is never inferable from PORTAL_NAME/PORTAL_URL alone: 'register on the platform and give a third-party access to view qualifications', 'share the electronic version of documents via Parchment', 'access official documents via ul.ie/verify'. T61 (this template's check_only sibling) already had this tag - T17 was missing it, an inconsistency this pass corrects.]",
+    "needed_tags": [
+      "COURSE_NAME",
+      "PORTAL_ACTION",
+      "PORTAL_NAME",
+      "PORTAL_URL",
+      "VS",
+      "YEAR_FROM",
+      "YEAR_TO"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Action Required",
+      "reason_detail": "Portal Action",
+      "needs_scope_choice": true,
+      "scope_value": "course_vs",
+      "scope_label": "A specific course/degree from a specific institute"
+    }
+  },
+  {
+    "id": "T18",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Mismatch",
+    "raw_text": "The <ANTECEDENTS> provided earlier for <COURSE_NAME> from <VS> does not match the available record. Kindly provide the correct value.",
+    "raw_tags": [
+      "ANTECEDENTS",
+      "COURSE_NAME",
+      "VS"
+    ],
+    "context_mode": "course_vs",
+    "scenario_label": null,
+    "optimized_text": "The following information provided earlier for <CONTEXT> does not match the available record: <ANTECEDENTS>. Kindly provide the correct value(s).",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): CONTEXT-bypass fix (see T10) plus restructured for multiselect-safe grammar (see T14's note) - ANTECEDENTS moved out of subject position.",
+    "needed_tags": [
+      "ANTECEDENTS",
+      "COURSE_NAME",
+      "VS",
+      "YEAR_FROM",
+      "YEAR_TO"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Mismatch - Course / Qualification detail vs records",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    },
+    "list_block": {
+      "tag": "ANTECEDENTS",
+      "lead_in": "The following details recorded for {CONTEXT} do not match our available records. To proceed with verification, kindly confirm or correct:"
+    }
+  },
+  {
+    "id": "T42",
+    "merged_from": [
+      "T43"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Action Required",
+    "reason_sub_type": "Visit/complete within deadline",
+    "raw_text": "Please complete <CHECK_NAME> at <VERIFICATION_LOCATION> within <NO_OF_DAYS> days.",
+    "raw_tags": [
+      "CHECK_NAME",
+      "VERIFICATION_LOCATION",
+      "NO_OF_DAYS"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "<VISIT_REASON> Please complete <CHECK_NAME> at <VERIFICATION_LOCATION> within <NO_OF_DAYS> days, carrying original <VISIT_DOCUMENTS> for verification.",
+    "reason_clause_added": "Fifth pass, 2026-08-19 (full-template tag audit): added VISIT_DOCUMENTS - the old text stated WHERE and BY WHEN to visit but never WHAT to bring. Real data: 8 of 8 (100%) T42-resolved comments explicitly list which original documents the candidate must carry ('visit the university with original degree, consolidated marksheet and Aadhar card'). Kept as its own tag rather than reusing DOCUMENTS, since DOCUMENTS drives the Mandatory/Any-one-of dual-bucket mechanism (with its own combined-sentence override) that doesn't fit an in-person checklist - real data never showed an OR-alternative here, just a plain AND-joined list. SIXTH PASS, 2026-08-19 (owner review: 'why the final comment doesn't contain a reason part'): added VISIT_REASON as a mandatory lead-in - re-checked all 8 real T42 rows and found every single one (8/8) states WHY the in-person visit is needed ('the candidate's record not found in the University', 'due to the unavailability of records', 'as per the letterhead response') - the old text (even after the VISIT_DOCUMENTS fix) still only ever said WHAT to bring and BY WHEN, never WHY a physical visit was required at all, missing the Reason element of this project's Reason+Solution+Action framework entirely.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "NO_OF_DAYS",
+      "VERIFICATION_LOCATION",
+      "VISIT_DOCUMENTS",
+      "VISIT_REASON"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Action Required",
+      "reason_detail": "Visit/complete within deadline",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T44",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Wrong / No Longer Valid - Contact Details",
+    "raw_text": "The <CONTACT_CHANNEL> previously provided for <CHECK_NAME> <CONTACT_OUTCOME>. Kindly provide another valid <CONTACT_CHANNEL>.",
+    "raw_tags": [
+      "CONTACT_CHANNEL",
+      "CHECK_NAME",
+      "CONTACT_OUTCOME",
+      "CONTACT_CHANNEL"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The <CONTACT_CHANNEL> previously provided for <CHECK_NAME> <CONTACT_OUTCOME>. Kindly provide another valid <CONTACT_CHANNEL>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CONTACT_CHANNEL",
+      "CONTACT_OUTCOME"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Wrong / Invalid - Contact Details Unreachable or Invalid",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T49",
+    "merged_from": [],
+    "insuff_category": "Client Approval",
+    "reason_category": "Disclosure Consent",
+    "reason_sub_type": "N/A",
+    "raw_text": "Kindly confirm whether <CLIENT_NAME> may be disclosed to <VS> for <CHECK_NAME>.",
+    "raw_tags": [
+      "CLIENT_NAME",
+      "VS",
+      "CHECK_NAME"
+    ],
+    "context_mode": "vs_only",
+    "scenario_label": null,
+    "optimized_text": "Kindly confirm whether <CLIENT_NAME> may be disclosed to <VS> for <CHECK_NAME>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "CLIENT_NAME",
+      "VS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Client Approval",
+      "reason_step_shown": true,
+      "reason": "Disclosure Consent",
+      "reason_detail": "N/A",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T50",
+    "merged_from": [],
+    "insuff_category": "Cost Approval",
+    "reason_category": "N/A",
+    "reason_sub_type": "N/A",
+    "raw_text": "Kindly approve the verification cost of <CURRENCY> <COST> for <CHECK_NAME> in <COUNTRY>.",
+    "raw_tags": [
+      "CURRENCY",
+      "COST",
+      "CHECK_NAME",
+      "COUNTRY"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": "Verification cost for a specific country",
+    "optimized_text": "Kindly approve the verification cost of <CURRENCY> <COST> for <CHECK_NAME> in <COUNTRY>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "COST",
+      "COUNTRY",
+      "CURRENCY"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Cost Approval",
+      "reason_step_shown": false,
+      "reason": null,
+      "reason_detail": "Verification cost for a specific country",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T51",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Missing - Case-level Information",
+    "raw_text": "Kindly provide <CASE_LEVEL_INFORMATION> for <CHECK_NAME>.",
+    "raw_tags": [
+      "CASE_LEVEL_INFORMATION",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The following information for {CONTEXT} was not provided with the case: {CASE_LEVEL_INFORMATION}. Kindly share this information for verification.",
+    "reason_clause_added": "information.missing_case_level (restructured 2026-08-18: see T14's note - same multiselect-safe-grammar fix, since CASE_LEVEL_INFORMATION is converted to multiselect this pass.)",
+    "needed_tags": [
+      "CASE_LEVEL_INFORMATION",
+      "CHECK_NAME"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Missing",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    },
+    "list_block": {
+      "tag": "CASE_LEVEL_INFORMATION",
+      "lead_in": "To complete the verification for {CONTEXT}, please provide the following missing details:"
+    }
+  },
+  {
+    "id": "T53",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Incomplete - Company Details Required",
+    "raw_text": "Kindly complete the <DOCUMENTS> by mentioning <FORM_COMPANY_NAME> as the company name. The form must include the candidate's full name and date and must be hand-signed.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "FORM_COMPANY_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The copy of {DOCUMENTS} submitted for {CONTEXT} did not include the required details/format. Kindly resubmit the same, mentioning <FORM_COMPANY_NAME> as the company name. The form must include the candidate's full name and date, and must be duly hand-signed.",
+    "reason_clause_added": "document.missing_special (fixed 2026-08-18: FORM_COMPANY_NAME was a required tag that never actually appeared anywhere in the rendered output - the old text said \"with the instructions below\" which dangled if the candidate/agent didn't also tick an optional Special Instructions checkbox. Now states the company name and the fixed full-name/date/hand-signed requirement directly, so nothing required is left invisible.)",
+    "needed_tags": [
+      "DOCUMENTS",
+      "FORM_COMPANY_NAME"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Incomplete - Missing required company details or signature",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T59",
+    "merged_from": [
+      "T52"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Mismatch - Verified Value on File",
+    "raw_text": "The <ANTECEDENTS> provided for <CHECK_NAME> does not match the supporting record. The value shown in the supporting record is <VERIFIED_VALUE>. Kindly confirm or update the correct value.",
+    "raw_tags": [
+      "ANTECEDENTS",
+      "CHECK_NAME",
+      "VERIFIED_VALUE"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The <ANTECEDENTS> stated in the <SOURCE_FORM> for <CHECK_NAME> does not match the supporting record. The value shown in the supporting record is <VERIFIED_VALUE>. Kindly confirm or update the correct value.",
+    "reason_clause_added": "Fifth pass, 2026-08-19 (full-template tag audit): added SOURCE_FORM - the old text said only 'The <ANTECEDENTS> provided', never saying WHICH form/record stated the conflicting value. Real data: 4 of 6 T59-resolved comments explicitly name the source ('Insuff of updated JAF as there is a mismatch of university name', '...(As per EAF)'), leaving the other 2 rows genuinely unclear - 'Other / not specified' kept as a fallback value so this stays a required field without blocking those cases.",
+    "needed_tags": [
+      "ANTECEDENTS",
+      "CHECK_NAME",
+      "SOURCE_FORM",
+      "VERIFIED_VALUE"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Mismatch - Value vs a verified record on file",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T60",
+    "merged_from": [],
+    "insuff_category": "TAT Approval",
+    "reason_category": "N/A",
+    "reason_sub_type": "N/A",
+    "raw_text": "Kindly approve an extension of <NO_OF_DAYS> days for <CHECK_NAME> because <VERIFICATION_BLOCKER>.",
+    "raw_tags": [
+      "NO_OF_DAYS",
+      "CHECK_NAME",
+      "VERIFICATION_BLOCKER"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": "TAT extension request",
+    "optimized_text": "Kindly approve an extension of <NO_OF_DAYS> days for <CHECK_NAME> because <VERIFICATION_BLOCKER>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "NO_OF_DAYS",
+      "VERIFICATION_BLOCKER"
+    ],
+    "dropdown_path": {
+      "insuff_category": "TAT Approval",
+      "reason_step_shown": false,
+      "reason": null,
+      "reason_detail": "TAT extension request",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T61",
+    "merged_from": [
+      "T55"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Action Required",
+    "reason_sub_type": "Portal Action",
+    "raw_text": "Please <PORTAL_ACTION> on <PORTAL_NAME> using <PORTAL_URL> to complete <CHECK_NAME>.",
+    "raw_tags": [
+      "PORTAL_ACTION",
+      "PORTAL_NAME",
+      "PORTAL_URL",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "Please <PORTAL_ACTION> on <PORTAL_NAME> using <PORTAL_URL> to complete <CHECK_NAME>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "PORTAL_ACTION",
+      "PORTAL_NAME",
+      "PORTAL_URL"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Action Required",
+      "reason_detail": "Portal Action",
+      "needs_scope_choice": true,
+      "scope_value": "check_only",
+      "scope_label": "General to this check (not tied to one course/institute)"
+    }
+  },
+  {
+    "id": "T62",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Action Required",
+    "reason_sub_type": "Source action",
+    "raw_text": "Please <SOURCE_ACTION> to complete <CHECK_NAME>.",
+    "raw_tags": [
+      "SOURCE_ACTION",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "Please <SOURCE_ACTION> to complete <CHECK_NAME>.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "SOURCE_ACTION"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Action Required",
+      "reason_detail": "Source action",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T63",
+    "merged_from": [
+      "T64"
+    ],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Wrong/Rejected - Institution's Own Record",
+    "raw_text": "The <SOURCE_DOCUMENT> submitted for <CHECK_NAME> cannot be accepted because <VERIFICATION_BLOCKER>. Kindly provide <DOCUMENTS>. <DOCUMENT_REQUIREMENTS>",
+    "raw_tags": [
+      "SOURCE_DOCUMENT",
+      "CHECK_NAME",
+      "VERIFICATION_BLOCKER",
+      "DOCUMENTS",
+      "DOCUMENT_REQUIREMENTS"
+    ],
+    "context_mode": "course_vs_optional",
+    "scenario_label": null,
+    "optimized_text": "The <SOURCE_DOCUMENT> submitted for <CONTEXT> cannot be accepted because <VERIFICATION_BLOCKER>. Kindly provide <DOCUMENTS>.",
+    "reason_clause_added": "Fixed 2026-08-18 (candidate-empathy audit): DOCUMENT_REQUIREMENTS was a required tag with no computation anywhere in CommentEngine.php (its own tag_values.json note said 'composed automatically from SPECIAL_INSTRUCTIONS', but nothing ever did that) - it either silently required manual free-text entry duplicating what Special Instructions already covers, or would sit unrendered. Dropped the tag entirely; T63's reason_category is already 'Document', so the existing generic Special Instructions mechanism (appended automatically by CommentEngine.php whenever selected) already covers this need without a dedicated tag.[2026-08-18 fourth fix: merged with retired T64 - COURSE_NAME/VS/YEAR_FROM/YEAR_TO are now OPTIONAL here instead of behind a forced Scope choice, since real data showed the large majority of real T64-resolved comments actually did reference a specific course.]",
+    "needed_tags": [
+      "DOCUMENTS",
+      "SOURCE_DOCUMENT",
+      "VERIFICATION_BLOCKER"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Wrong/Rejected - Institution's own record rejected the source document",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T65",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Missing - Address",
+    "raw_text": "Kindly provide the complete address in <COUNTRY> for <CHECK_NAME>.",
+    "raw_tags": [
+      "COUNTRY",
+      "CHECK_NAME"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The complete address of <VS> in <COUNTRY> was not provided with the case (required for <CHECK_NAME>). Kindly provide the institute's complete address for verification.",
+    "reason_clause_added": "information.missing_address (fixed 2026-08-18, candidate-empathy audit: added ADDRESS_TYPE - the old text never said WHICH address (current/previous/permanent), leaving a candidate with more than one on file unsure which one to send.) CORRECTED 2026-08-19 (fifth pass, full-template tag audit): re-checked all 30 real T65-resolved rows and found ADDRESS_TYPE was a mismatched assumption - every single row asks for the INSTITUTE's address/location ('Require Location with complete address of the ITM University', 'address of institute'), never a person's residential history, so a Current/Previous/Permanent distinction never actually applied. Replaced ADDRESS_TYPE with VS (institute name) instead, since real data shows WHICH institute's address is the actual live ambiguity - none of the 30 rows can be answered without knowing which institute, but ADDRESS_TYPE never once appears as a real distinction anyone needed.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "COUNTRY",
+      "VS"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Missing - Institute's Address",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T66",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Incomplete - Specific Format Required",
+    "raw_text": "Kindly provide <DOCUMENTS> for <CHECK_NAME>. Please use the approved format available at <REFERENCE_URL>.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "CHECK_NAME",
+      "REFERENCE_URL"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The copy of {DOCUMENTS} submitted for {CONTEXT} did not include the required details/format. Kindly resubmit the same using the approved format available at <REFERENCE_URL>.",
+    "reason_clause_added": "document.missing_special (fixed 2026-08-18: same class of bug as T53 - REFERENCE_URL was a required tag that never appeared in the rendered output, and \"the instructions below\" dangled if no optional Special Instructions were also ticked. Now states the format-reference URL directly.)",
+    "needed_tags": [
+      "CHECK_NAME",
+      "DOCUMENTS",
+      "REFERENCE_URL"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Incomplete - Not in the approved or required format",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T68",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Expired - State Validity Period",
+    "raw_text": "The <DOCUMENTS> submitted for <CHECK_NAME> has expired. It is valid only for <VALIDITY_PERIOD> from the date of issue. Kindly provide a valid and current copy.",
+    "raw_tags": [
+      "DOCUMENTS",
+      "CHECK_NAME",
+      "VALIDITY_PERIOD"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The copy of <DOCUMENTS> submitted for <CHECK_NAME> has expired. It is valid only for <VALIDITY_PERIOD> from the date of issue. Kindly provide a valid and current copy.",
+    "reason_clause_added": null,
+    "needed_tags": [
+      "CHECK_NAME",
+      "DOCUMENTS",
+      "VALIDITY_PERIOD"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Expired - states a validity period",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T69",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Review Raised",
+    "reason_sub_type": "Review Raised",
+    "raw_text": "Review raised<REASON_DETAIL>. Kindly check and confirm<FURTHER_ACTION>.",
+    "raw_tags": [
+      "REASON_DETAIL",
+      "FURTHER_ACTION"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "Review raised for <CHECK_NAME> - <REVIEW_REASON>. Kindly check and confirm at the earliest.",
+    "reason_clause_added": "Built Phase 4 (2026-08-18) from Actual_To_Atomic_Mapping.xlsx's 'Not Captured' sheet, 'Review Raised' family (10 real rows, e.g. 'Review Raised for Suspect Positive Response', 'Review raised. Response time is high, Less TAT.'). The raw real comments frequently gave NO reason at all ('Review raised. Please check and confirm.') - REVIEW_REASON is made mandatory here so every generated comment states a concrete why, matching the project's Reason+Solution+Action framework instead of reproducing that ambiguity.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "REVIEW_REASON"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Review Raised",
+      "reason_detail": "Review Raised",
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T70",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Field Mismatch - Conflicting Values",
+    "raw_text": "Antecedent Value Contains <VALUE1> AND ... Contains <VALUE2>.",
+    "raw_tags": [
+      "VALUE1",
+      "VALUE2"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The <FIELD_NAME> recorded for <CHECK_NAME> is inconsistent across sources - it shows \"<VALUE1>\" in one record and \"<VALUE2>\" in another. Kindly confirm the correct value and update accordingly.",
+    "reason_clause_added": "Built Phase 4 (2026-08-18) from Actual_To_Atomic_Mapping.xlsx's 'Not Captured' sheet, 'Antecedent Value Contains' family (real example: 'Course Name / Qualification Antecedent Value Contains Diploma AND Course Name / Qualification Antecedent Value Contains Certificate', 10 rows). Reworded from the raw system-audit phrasing into a plain sentence a candidate/ops agent can actually read.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "FIELD_NAME",
+      "VALUE1",
+      "VALUE2"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Mismatch - Two sources disagree on the same field",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T71",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Field Below Minimum - Threshold Not Met",
+    "raw_text": "<FIELD_NAME> Antecedent Value Less than <THRESHOLD>.",
+    "raw_tags": [
+      "THRESHOLD"
+    ],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The <FIELD_NAME> recorded for <CHECK_NAME> is less than the expected minimum of <THRESHOLD>, which needs review before verification can proceed. Kindly confirm the correct <FIELD_NAME> or provide supporting justification.",
+    "reason_clause_added": "Built Phase 4 (2026-08-18) from Actual_To_Atomic_Mapping.xlsx's 'Not Captured' sheet, 'Antecedent Value Contains' family / Less-Than variant (real example: 'Period of Education Antecedent Value Less than 2 Years', 8 rows). Reworded from raw system-audit phrasing into a plain sentence.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "FIELD_NAME",
+      "THRESHOLD"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Below Required Minimum",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T72",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Information",
+    "reason_sub_type": "Wrong/Invalid - Other Detail",
+    "raw_text": null,
+    "raw_tags": [],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The <FIELD_NAME> provided for <CHECK_NAME> <INVALID_REASON>. Kindly provide a valid, corrected value for verification.",
+    "reason_clause_added": "Built 2026-08-24 (owner-approved dropdown expansion, Information Reason->Scenario rebuild) - generalizes T44's 'wrong/invalid contact' pattern to any other case field (address, institute/course name, identifier number, verification portal link) that's been provided but isn't usable as-is. Reuses FIELD_NAME (already used by T70/T71, expanded this same pass) and a new INVALID_REASON tag - no CommentEngine.php changes needed, both resolve via the existing generic tag-substitution loop, same mechanism as T70/T71. NOT yet confirmed against real classified data - built on Ops common-sense per the owner's explicit request to add these values; flagged here rather than presented as dataset-backed like T44/T71.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "FIELD_NAME",
+      "INVALID_REASON"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Information",
+      "reason_detail": "Wrong / Invalid - Other Detail is Wrong or Invalid",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    }
+  },
+  {
+    "id": "T73",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Incomplete - Other Detail",
+    "raw_text": null,
+    "raw_tags": [],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The copy of {DOCUMENTS} submitted for {CONTEXT} is incomplete. Kindly resubmit a complete, corrected copy addressing the following: <INCOMPLETE_DETAIL>",
+    "reason_clause_added": "Built 2026-08-25 (owner-approved dropdown expansion, Document Reason->Scenario rebuild) - reusable catch-all for the Incomplete bucket, alongside T11 (partially visible copy), T53 (missing company details/signature), and T66 (wrong format), mirroring the T51 catch-all pattern already used for Information/Missing. Originally omitted a DOCUMENTS tag entirely (generic 'the document' wording like T51) to avoid list_block()'s then CONTEXT-only lead_in substitution - REVISED 2026-08-25 (same day, owner live-tested this template: 'why do we not have any docs or details here to select?') after realizing, unlike T51 (case-level info, genuinely not about one document), T73 IS specifically about a document's condition and naming it is the whole point - a vague 'the document' produces an unhelpful comment. Fixed by extending listBlock()'s lead_in substitution to also handle <DOCUMENTS>/{DOCUMENTS} (php/CommentEngine.php) and adding DOCUMENTS to needed_tags here, reusing the same Mandatory+Any-one-of document builder as T9-T13. Also reordered CommentEngine.php's list_block-vs-combined-document-sentence precedence so list_block always wins when both trigger (only relevant to T73/T74, the first templates to carry both) - otherwise filling both Mandatory and Any-one-of buckets would silently drop the INCOMPLETE_DETAIL bullets. Standardized/reusable INCOMPLETE_DETAIL values only (not tied to one specific real comment's wording), per the owner's explicit 'each value should be reusable' instruction.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "DOCUMENTS",
+      "INCOMPLETE_DETAIL"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Incomplete - Other specific defect (signature, page, photograph, letterhead)",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    },
+    "list_block": {
+      "tag": "INCOMPLETE_DETAIL",
+      "lead_in": "The copy of {DOCUMENTS} submitted for {CONTEXT} is incomplete. Kindly resubmit a complete, corrected copy addressing the following:"
+    }
+  },
+  {
+    "id": "T74",
+    "merged_from": [],
+    "insuff_category": "Insufficiency",
+    "reason_category": "Document",
+    "reason_sub_type": "Blurred/Illegible - Specific Defect",
+    "raw_text": null,
+    "raw_tags": [],
+    "context_mode": "check_only",
+    "scenario_label": null,
+    "optimized_text": "The copy of {DOCUMENTS} submitted for {CONTEXT} could not be read clearly. Kindly resubmit a clear, complete copy addressing the following: <BLUR_DETAIL>",
+    "reason_clause_added": "Built 2026-08-25 (owner-approved dropdown expansion, Document Reason->Scenario rebuild) - reusable catch-all for the Blurred/Illegible bucket alongside T10 (whole-copy blur), same pattern as T73/T51. REVISED 2026-08-25 (same day, owner live-tested this template: 'why do we not have any docs or details here to select?') - see T73's reason_clause_added for the full writeup (same fix applied identically here): added DOCUMENTS to needed_tags, extended listBlock()'s lead_in substitution to handle <DOCUMENTS>/{DOCUMENTS}, reordered list_block-vs-combined-document precedence in php/CommentEngine.php. Standardized/reusable BLUR_DETAIL values only, per the owner's explicit instruction.",
+    "needed_tags": [
+      "CHECK_NAME",
+      "DOCUMENTS",
+      "BLUR_DETAIL"
+    ],
+    "dropdown_path": {
+      "insuff_category": "Insufficiency",
+      "reason_step_shown": true,
+      "reason": "Document",
+      "reason_detail": "Blurred/Illegible - Specific defect (page, section, fading, cropping)",
+      "reason_scenario": null,
+      "needs_scope_choice": false,
+      "scope_value": null,
+      "scope_label": null
+    },
+    "list_block": {
+      "tag": "BLUR_DETAIL",
+      "lead_in": "The copy of {DOCUMENTS} submitted for {CONTEXT} could not be read clearly. Kindly resubmit a clear, complete copy addressing the following:"
+    }
+  }
+]

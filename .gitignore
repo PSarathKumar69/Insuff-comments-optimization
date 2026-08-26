@@ -1,0 +1,30 @@
+# --- Secrets ---------------------------------------------------------------
+# Holds live GEMINI_API_KEY / TRIAGE_GEMINI_API_KEY. Never commit.
+.env
+
+# --- Agent / editor local state -------------------------------------------
+CLAUDE.md
+.claude/
+__pycache__/
+*.pyc
+
+# --- Real client data (deliberately NOT published) -------------------------
+# These all contain the 8,284 real historical insufficiency comments, which
+# carry third-party PII (institution contact emails, occasional candidate
+# names/DOBs). The app needs data/search_index.json at runtime - supply it
+# locally, see Education_Dropdown_MVP/README.md.
+Education_Dropdown_MVP/data/search_index.json
+Source Excel sheets/
+Output Excel Sheets/
+*.jsonl
+stage1_checkpoint.state.json
+stage2_checkpoint.state.json
+
+# --- Internal history (same raw comment text quoted throughout) -----------
+PROGRESS_LOG.md
+
+# --- Superseded ------------------------------------------------------------
+# Early prototype, replaced by Education_Dropdown_MVP/.
+prototype/
+# Historical copy of earlier work, nothing new goes here.
+Insuff Comments/

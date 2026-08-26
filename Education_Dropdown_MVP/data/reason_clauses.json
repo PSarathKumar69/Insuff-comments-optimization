@@ -1,0 +1,11 @@
+{
+  "document.missing": "{DOCUMENTS} for {CONTEXT} was not submitted with the case. Kindly provide the same for verification.",
+  "document.missing_signed": "The {DOCUMENTS} submitted for {CONTEXT} was not duly signed. Kindly provide a duly signed copy for verification.",
+  "document.missing_special": "The {DOCUMENTS} submitted for {CONTEXT} did not include the required details/format. Kindly resubmit the {DOCUMENTS} with the instructions below.",
+  "information.missing": "{ANTECEDENTS} for {CONTEXT} was not provided with the case. Kindly share this information for verification.",
+  "information.missing_identifier": "The {IDENTIFIER_TYPE} for {CONTEXT} was not provided with the case. Kindly share this identifier for verification.",
+  "information.missing_contact": "The {CONTACT_CHANNEL} of the {CONTACT_ROLE} for {CONTEXT} was not provided with the case. Kindly share this contact detail for verification.",
+  "information.missing_case_level": "{CASE_LEVEL_INFORMATION} for {CONTEXT} was not provided with the case. Kindly share this information for verification.",
+  "information.missing_address": "A complete address in {COUNTRY} for {CONTEXT} was not provided with the case. Kindly provide the complete address for verification.",
+  "_comment": "Each value here is a FULL Reason+Action sentence (not a fragment to prepend) - avoids restating DOCUMENTS/CONTEXT twice. Templates whose raw text ALREADY narrates the reason inline (Blurred/Incomplete/Expired/Wrong-Rejected/Mismatch/Contact-outcome sub-types) do NOT use a clause from this file at all - they already pass the acceptance bar as-is."
+}

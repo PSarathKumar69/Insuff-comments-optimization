@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Generate Insufficiency Comments</title>
+<style>
+  :root {
+    --navy:#1b2a4a; --blue:#2f6fed; --blue-light:#eaf1ff; --border:#dfe4ee;
+    --text:#1f2937; --muted:#6b7280; --green:#1f9d55; --amber:#b45309; --red:#c0362c;
+    --bg:#f5f7fb; --card:#ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg); color: var(--text); padding: 24px 20px 60px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 19px; font-weight:600; margin: 0 0 18px; color: var(--navy); }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 22px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(20,30,60,.03);
+  }
+  /* Softened 2026-08-24 (owner: UI "not cool and smooth... heading in BOLD") -
+     was uppercase + letter-spaced + navy, which read as shouty section
+     dividers. Small, muted, sentence-case labels read calmer while still
+     separating cards. */
+  .card h2 { font-size: 12.5px; font-weight:600; text-transform:none; letter-spacing:normal; color: var(--muted); margin: 0 0 12px; }
+  .header-row { display:flex; gap: 24px; flex-wrap: wrap; }
+  .header-field { flex: 0 1 260px; min-width:200px; }
+  .header-field label { display:block; font-size:11px; color: var(--muted); text-transform:uppercase; letter-spacing:.03em; margin-bottom:4px; }
+  .readonly-pill {
+    display:inline-block; background: var(--blue-light); color: var(--blue); font-weight:600;
+    padding: 7px 12px; border-radius: 6px; font-size: 14px; width:100%;
+  }
+  .field { margin-bottom: 14px; }
+  .field label { display:block; font-size: 13px; font-weight:600; margin-bottom: 5px; color:#374151; }
+  .field .hint { font-size:11px; color: var(--muted); margin-top:3px; }
+  select, input[type=text] {
+    width:100%; padding: 9px 10px; border:1px solid var(--border); border-radius:6px;
+    font-size:14px; background:#fff; color: var(--text);
+  }
+  select:disabled, input:disabled { background:#f3f4f6; color:#9ca3af; }
+  .row { display:flex; gap:14px; flex-wrap:wrap; }
+  /* Changed 2026-08-24 (continued) from flex:0 1 320px/min-width:220px - a
+     fixed 320px-per-field basis stopped fitting once a 3rd/4th field
+     revealed itself in the Category & Reason row (3*320px + gaps > the
+     card's actual ~936px content width), so the overflowing field(s) fell
+     onto their own orphan line with a large empty gap beside them instead
+     of sitting next to their siblings. flex:1 1 200px lets every visible
+     field grow to fill the row evenly (2 fields ~= 50/50, 4 fields ~= 25%
+     each) and only wraps as a last resort on genuinely narrow viewports. */
+  .row > .field { flex: 1 1 200px; min-width: 180px; }
+  .row + .row { margin-top:2px; }
+  .chip-list { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    border:1px solid var(--border); border-radius:20px; padding:6px 12px; font-size:13px;
+    cursor:pointer; background:#fff; user-select:none;
+  }
+  .chip.selected { background: var(--blue); color:#fff; border-color: var(--blue); }
+  .chip.instr { border-radius:6px; }
+  .other-input { margin-top:8px; }
+  .preview-box {
+    background: var(--navy); color:#fff; border-radius:8px; padding: 18px 20px;
+    font-size: 15px; line-height:1.6; min-height: 60px; white-space: pre-wrap;
+  }
+  .preview-empty { color: #9fb0d9; font-style: italic; }
+  .badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; margin-right:6px; }
+  .badge-cat { background:#eef2ff; color:#4338ca; }
+  .badge-reason { background:#ecfdf5; color:#047857; }
+  .error-box { background:#fef2f2; border:1px solid #fca5a5; color:var(--red); padding:10px 14px; border-radius:6px; font-size:13px; }
+  .meta-row { margin-bottom:10px; }
+  .muted-note { font-weight:400; color: var(--muted); font-size:12px; }
+  button.copy-btn {
+    margin-top:10px; background:#fff; border:1px solid var(--border); color: var(--navy);
+    padding:6px 12px; border-radius:6px; font-size:12px; cursor:pointer;
+  }
+  button.copy-btn:hover { background:var(--blue-light); }
+  .op-button { border:1px solid var(--border); border-radius:6px; padding:9px 16px; font-size:13px; cursor:pointer; background:#fff; color:var(--text); }
+  .op-button.active { background: var(--blue); color:#fff; border-color: var(--blue); }
+  .op-button:disabled { opacity:.4; cursor:not-allowed; }
+
+  /* Search card */
+  .search-card { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .search-card input[type=text] { flex:1; min-width:280px; }
+  .search-card button {
+    background: var(--blue); color:#fff; border:none; padding:10px 18px; border-radius:6px;
+    font-size:14px; cursor:pointer; font-weight:600;
+  }
+  .search-results { margin-top:16px; display:flex; flex-direction:column; gap:10px; }
+  .result-row { border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:13px; }
+  .status-pill { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
+  .status-supported { background:#ecfdf5; color:#047857; }
+  .status-partial { background:#fffbeb; color:#b45309; }
+  .status-not { background:#fef2f2; color:#c0362c; }
+  .result-comment { color:#374151; margin-top:4px; }
+  .result-meta { color:#9ca3af; font-size:11px; margin-top:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Generate Insufficiency Comments</h1>
+
+  <!-- Header: auto-filled context -->
+  <div class="card">
+    <h2>Case context</h2>
+    <div class="header-row">
+      <div class="header-field">
+        <label>Family</label>
+        <div class="readonly-pill">Education</div>
+      </div>
+      <div class="header-field">
+        <label>Check</label>
+        <select id="checkName"></select>
+      </div>
+      <div class="header-field">
+        <label>Case Type</label>
+        <select id="caseType">
+          <option value="Domestic">Domestic</option>
+          <option value="Overseas">Overseas</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category / Sub-Category / Reason / Scope - ALL in ONE row
+       (2026-08-24, continued: owner screenshotted the previous 2-row split
+       and said "ui is not good" - Reason/Scenario were wrapping onto their
+       own orphan lines with large empty gaps because the row's fixed
+       320px-per-field width didn't actually fit inside the card, and
+       Scenario/Scope lived in a visually separate second row from
+       Category/Sub-Category/Reason). Merged into a single .row so revealed
+       fields sit together and wrap as a group if the card is ever too
+       narrow, instead of Reason stranding itself on its own line.
+       Sub-Category/Reason/Scope all start display:none and are only
+       unhidden once their prerequisite is picked (reveal-in-order, per the
+       owner's earlier instruction).
+       Scenario field REMOVED 2026-08-26 (owner: "remove the Scenario Tag
+       from the UI - it doesn't make any sense"). Document/Information used
+       to resolve Reason -> Scenario -> template (2 dropdown levels); the
+       Scenario level is now folded directly into the Reason dropdown itself
+       - dropdown_tree.json's Document/Information branches were flattened
+       so every option Reason now shows is already the specific, final pick
+       (e.g. "Incomplete - Missing required company details or signature"),
+       going straight to a template with no extra step. No template
+       reachability was lost - every option the old Scenario dropdown used
+       to offer is now a Reason option instead. See PROGRESS_LOG.md's
+       2026-08-26 entry for the full before/after mapping. -->
+  <div class="card">
+    <h2>Category &amp; Reason</h2>
+    <div class="row">
+      <div class="field">
+        <label>Category</label>
+        <select id="insuffCategory"></select>
+      </div>
+      <div class="field" id="reasonField" style="display:none;">
+        <label>Sub-Category</label>
+        <select id="reason"></select>
+      </div>
+      <div class="field" id="subReasonField" style="display:none;">
+        <label>Reason</label>
+        <select id="subReason"></select>
+      </div>
+      <div class="field" id="scopeField" style="display:none;">
+        <label>Scope</label>
+        <select id="scope">
+          <option value="course_vs">Specific course/institute</option>
+          <option value="check_only">General to this check</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic detail fields -->
+  <div class="card" id="detailSection" style="display:none;">
+    <h2>Details</h2>
+    <div id="dynamicFields"></div>
+  </div>
+
+  <!-- Live preview -->
+  <div class="card">
+    <h2>Generated comment</h2>
+    <div id="metaRow" class="meta-row"></div>
+    <div id="preview" class="preview-box"><span class="preview-empty">Select a Category above to begin…</span></div>
+    <div id="errorBox"></div>
+    <button class="copy-btn" id="copyBtn" style="display:none;">Copy comment</button>
+  </div>
+
+  <!-- Search / triage card (separate, horizontal, at the bottom) -->
+  <div class="card">
+    <h2>Support triage</h2>
+    <div class="subtitle" style="margin-bottom:12px;">Paste a past comment to check if today's system can reproduce it.</div>
+    <div class="search-card">
+      <input type="text" id="searchInput" placeholder="e.g. Kindly provide degree certificate for verification from Delhi University">
+      <button id="searchBtn">Search</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+
+<script src="app.js?v=20260826a"></script>
+</body>
+</html>
