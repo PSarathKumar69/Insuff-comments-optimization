@@ -104,7 +104,18 @@ class SearchEngine
 
     public function __construct(string $dataDir)
     {
-        $this->rows = json_decode(file_get_contents($dataDir . '/search_index.json'), true);
+        // search_index.json is deliberately NOT committed to version control - it
+        // holds 8,284 real historical comments carrying third-party PII (see the
+        // repo .gitignore and Education_Dropdown_MVP/README.md). Any deployment
+        // built from the repo alone (Vercel, a fresh clone) therefore starts
+        // WITHOUT it. Added 2026-08-27: treat that as an empty index rather than
+        // letting file_get_contents() warn and json_decode(false) hand back null,
+        // which used to make the very next foreach fatal - a 500 on every search
+        // request instead of a usable app with one feature switched off.
+        $indexPath = $dataDir . '/search_index.json';
+        $this->rows = is_readable($indexPath)
+            ? (json_decode(file_get_contents($indexPath), true) ?: [])
+            : [];
         $templates = json_decode(file_get_contents($dataDir . '/templates.json'), true);
         $this->tagValues = json_decode(file_get_contents($dataDir . '/tag_values.json'), true);
         $this->templatesById = [];
@@ -447,8 +458,40 @@ class SearchEngine
      *   template_id (nullable), steps (array, empty if not supported),
      *   matched_historical_comment, match_score, match_seen_count
      */
+    /** True when search_index.json was present and non-empty at construction. */
+    public function hasIndex(): bool
+    {
+        return !empty($this->rows);
+    }
+
     public function evaluate(string $query): array
     {
+        // No index deployed (see __construct). Say so plainly instead of
+        // reporting "doesn't match anything in the classified historical
+        // dataset", which would be a lie about a dataset that isn't loaded -
+        // and would send the agent off to request a new template for a query
+        // the tool never actually looked at. Gemini is still tried first if
+        // it's configured, since it needs no local index to resolve a query.
+        if (!$this->hasIndex()) {
+            $gem = $this->gemini->isConfigured()
+                ? $this->gemini->classify($query, array_values($this->templatesById), $this->tagValues)
+                : null;
+            if ($gem !== null) {
+                return $this->evaluateFromGemini($query, $gem, null);
+            }
+            return [
+                'query' => $query,
+                'matched_by' => 'no_index',
+                'supported' => null,
+                'verdict_label' => 'Search unavailable',
+                'verdict_reason' => 'The historical comment index (data/search_index.json) is not present in this deployment, so a real comment cannot be matched to a dropdown path here. The dropdown generator itself is unaffected. See Education_Dropdown_MVP/README.md for how to supply the index.',
+                'template_id' => null,
+                'steps' => [],
+                'matched_historical_comment' => null,
+                'match_score' => 0.0,
+            ];
+        }
+
         $top = $this->findTopMatches($query, self::TOP_K);
 
         if ($this->localConfidence($top)) {

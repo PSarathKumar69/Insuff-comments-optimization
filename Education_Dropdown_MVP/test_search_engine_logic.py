@@ -72,7 +72,12 @@ def field_label(tag):
 
 class SearchEngine:
     def __init__(self, data_dir, gemini_classify=None, gemini_configured=True):
-        self.rows = json.load(open(os.path.join(data_dir, "search_index.json")))
+        # Mirrors php/SearchEngine.php::__construct() as of 2026-08-27:
+        # search_index.json is gitignored (real comment text / PII), so a
+        # deployment or clone built from the repo alone has no index. Treat that
+        # as an empty index instead of exploding on the next foreach.
+        index_path = os.path.join(data_dir, "search_index.json")
+        self.rows = json.load(open(index_path, encoding="utf-8")) if os.path.isfile(index_path) else []
         templates = json.load(open(os.path.join(data_dir, "templates.json")))
         self.templates_by_id = {t["id"]: t for t in templates}
         # Injected for testing: a function(query, templates, tag_values) -> dict|None,
@@ -253,7 +258,26 @@ class SearchEngine:
             "template_id": None, "steps": [], "matched_historical_comment": None, "match_score": 0.0,
         }
 
+    def has_index(self):
+        '''Mirrors php/SearchEngine.php::hasIndex().'''
+        return bool(self.rows)
+
     def evaluate(self, query):
+        # Mirrors php/SearchEngine.php::evaluate()'s no-index guard (2026-08-27):
+        # with no index loaded, report the search as unavailable rather than
+        # claiming the query matched nothing in a dataset that was never read.
+        # Gemini is still tried, since it needs no local index.
+        if not self.has_index():
+            gem = self.gemini_classify(query) if (self.gemini_configured and self.gemini_classify) else None
+            if gem is not None:
+                return self.evaluate_from_gemini(query, gem, None)
+            return {
+                "query": query, "matched_by": "no_index", "supported": None,
+                "verdict_label": "Search unavailable",
+                "verdict_reason": "The historical comment index (data/search_index.json) is not present in this deployment, so a real comment cannot be matched to a dropdown path here. The dropdown generator itself is unaffected.",
+                "template_id": None, "steps": [], "matched_historical_comment": None, "match_score": 0.0,
+            }
+
         top = self.find_top_matches(query, TOP_K)
 
         if self.local_confidence(top):
@@ -483,6 +507,47 @@ def run_tests():
     assert result_amb_gem["matched_by"] == "gemini"
     assert result_amb_gem["template_id"] == "T9"
     print("PASS: with Gemini reachable the same query still resolves - escalation path untouched.")
+
+    # ---- Part D: no search index deployed (Vercel / a fresh clone) ----
+    # Added 2026-08-27. search_index.json is gitignored - it carries real
+    # historical comment text with third-party PII - so any deployment built from
+    # the repo alone starts without it. Before this, the constructor's
+    # json_decode(file_get_contents(<missing>)) handed back null and the very next
+    # foreach was fatal: a 500 on every search request. Now the dropdown generator
+    # keeps working and search honestly reports itself unavailable.
+    print("\n" + "=" * 100)
+    print("PART D: no search_index.json present -> 'Search unavailable', not a crash")
+    print("=" * 100)
+    import tempfile, shutil
+    with tempfile.TemporaryDirectory() as tmp:
+        # Same data dir minus the index; templates/tag_values still present.
+        for f in ("templates.json", "tag_values.json", "dropdown_tree.json"):
+            shutil.copy(os.path.join(DATA_DIR, f), os.path.join(tmp, f))
+        assert not os.path.isfile(os.path.join(tmp, "search_index.json"))
+
+        engine_noidx = SearchEngine(tmp, gemini_classify=None, gemini_configured=False)
+        assert engine_noidx.has_index() is False
+        r = engine_noidx.evaluate("please provide the degree certificate")
+        print("matched_by:", r["matched_by"], "| verdict:", r["verdict_label"], "| supported:", r["supported"])
+        assert r["matched_by"] == "no_index"
+        assert r["verdict_label"] == "Search unavailable"
+        assert r["supported"] is None, "must claim neither supported nor not-supported - it never looked"
+        assert r["steps"] == [] and r["template_id"] is None
+        assert "not present in this deployment" in r["verdict_reason"]
+        # The misleading "nothing matched the dataset" line must not appear here.
+        assert "closely match anything" not in r["verdict_reason"]
+        print("PASS: missing index reports 'Search unavailable' instead of crashing or faking a verdict.")
+
+        # Gemini needs no local index - it must still be tried, and still resolve.
+        engine_noidx_gem = SearchEngine(tmp, gemini_classify=lambda q: {
+            "template_id": "T9", "confidence": "high",
+            "extracted_tags": [], "suggested_documents": ["Degree Certificate"],
+        })
+        r2 = engine_noidx_gem.evaluate("please provide the degree certificate")
+        print("with Gemini reachable -> matched_by:", r2["matched_by"], "| template:", r2["template_id"])
+        assert r2["matched_by"] == "gemini" and r2["template_id"] == "T9" and r2["supported"] is True
+        assert r2["steps"], "Gemini path must still build a step guide with no local index"
+        print("PASS: with no index but Gemini reachable, queries still resolve fully.")
 
     print("\nAll scenarios passed.")
 

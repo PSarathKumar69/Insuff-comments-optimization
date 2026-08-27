@@ -30,7 +30,7 @@ function docApplies(tagMeta, doc) {
 const $ = (id) => document.getElementById(id);
 
 async function boot() {
-  const res = await fetch('data.php');
+  const res = await fetch('/api/data.php');
   DATA = await res.json();
 
   // Header check-name simulator
@@ -84,11 +84,6 @@ function escapeHtml(s) {
 function onCategoryChange() {
   selection = { category: $('insuffCategory').value, reason: null, subReason: null, scope: null, templateId: null };
   fieldValues = {};
-  // Testing convenience (asked for repeatedly this session): VS (institute
-  // name) is auto-fetched from Bridge case data in production, so in this
-  // prototype it's pre-filled with a dummy value instead of forcing every
-  // test run to type it out - still a plain editable text field, not locked.
-  fieldValues['VS'] = 'Delhi University';
   $('detailSection').style.display = 'none';
   $('scopeField').style.display = 'none';
   // Revealed-in-order behavior (2026-08-24, owner: "first only show Category
@@ -184,7 +179,6 @@ function onScopeChange() {
   const node = DATA.dropdown_tree[selection.category][selection.reason][selection.subReason];
   selection.templateId = node[selection.scope];
   fieldValues = {}; // scope change alters which tags are needed - reset details
-  fieldValues['VS'] = 'Delhi University'; // testing convenience, see onCategoryChange()
   renderDetailFields();
 }
 
@@ -228,6 +222,25 @@ function renderDetailFields() {
   box.innerHTML = '';
   if (!tpl) { $('detailSection').style.display = 'none'; renderPreview(null); return; }
   $('detailSection').style.display = 'block';
+
+  // Testing convenience: VS (institute name) is auto-fetched from Bridge case
+  // data in production, so this prototype pre-fills a dummy value rather than
+  // making every test run type it out. Still a plain editable text field.
+  //
+  // Fixed 2026-08-27: this used to run unconditionally on every category/scope
+  // change, which BROKE the whole point of course_vs_optional. Those templates
+  // require COURSE_NAME and VS together-or-neither, so a permanently pre-filled
+  // VS meant "neither" was unreachable from the UI: picking only a Qualification
+  // Level (UG/PG/Highest degree - the intended path for a case with no specific
+  // course, institute or year) always came back "If specifying a course/degree,
+  // both course_name and vs are required together", with no indication that an
+  // invisible dummy institute was the thing blocking it. Now pre-filled only for
+  // the context modes where VS is genuinely mandatory anyway (course_vs,
+  // vs_only), so it can never manufacture a half-filled pair. Guarded on the key
+  // being absent rather than empty so deliberately clearing the field sticks.
+  if ((tpl.context_mode === 'course_vs' || tpl.context_mode === 'vs_only') && !('VS' in fieldValues)) {
+    fieldValues['VS'] = 'Delhi University';
+  }
 
   let html = '';
 
@@ -662,7 +675,7 @@ async function renderAndGenerate() {
   }
 
   try {
-    const res = await fetch('generate.php', { method: 'POST', body: JSON.stringify(payload) });
+    const res = await fetch('/api/generate.php', { method: 'POST', body: JSON.stringify(payload) });
     const data = await res.json();
     renderPreview(data, tpl);
   } catch (e) {
@@ -717,7 +730,7 @@ async function doSearch() {
   const box = $('searchResults');
   if (!q) { box.innerHTML = ''; return; }
   box.innerHTML = '<div style="color:var(--muted);font-size:13px;">Checking…</div>';
-  const res = await fetch('search.php?q=' + encodeURIComponent(q));
+  const res = await fetch('/api/search.php?q=' + encodeURIComponent(q));
   const data = await res.json();
   box.innerHTML = renderVerdict(data);
 }
@@ -737,6 +750,8 @@ function renderVerdict(data) {
   let matchByNote = '';
   if (data.matched_by === 'gemini') {
     matchByNote = `<div class="result-meta">Resolved via semantic match${data.gemini_confidence ? ' (confidence: ' + escapeHtml(data.gemini_confidence) + ')' : ''} — the keyword search alone wasn't confident enough here.</div>`;
+  } else if (data.matched_by === 'no_index') {
+    matchByNote = `<div class="result-meta">The historical comment index isn't present in this deployment, so nothing was matched — the dropdown generator above is unaffected. See the project README for how to supply <code>data/search_index.json</code>.</div>`;
   } else if (data.matched_by === 'local_fallback') {
     matchByNote = `<div class="result-meta">This one was ambiguous for the keyword search, and semantic matching wasn't reachable — so it's left unresolved on purpose rather than shown as a low-confidence guess. Pick the dropdown path manually, or escalate.</div>`;
   }

@@ -12,7 +12,7 @@
 3. Open a terminal in VS Code (`` Ctrl+` ``), make sure you're in *this*
    folder, then run:
    ```
-   php -S localhost:8000 -t public
+   php -S localhost:8000 -t public router.php
    ```
 4. Open `http://localhost:8000` in your browser. You'll see the full
    dropdown builder: category → reason → detail fields → live generated
@@ -75,7 +75,7 @@ Two files the app reads are deliberately excluded from version control
 (see `.gitignore` at the repo root) and must be supplied locally:
 
 **1. `data/search_index.json`** — powers the support-triage search card
-(`php/SearchEngine.php`, `public/search.php`). It holds 8,284 real historical
+(`php/SearchEngine.php`, `api/search.php`). It holds 8,284 real historical
 insufficiency comments plus ~12 synthetic rows, and that comment text carries
 third-party PII: institution contact email addresses, and occasional candidate
 names and dates of birth. It is not published. Without it, the dropdown
@@ -103,3 +103,58 @@ The phase-1 pipeline's inputs and outputs (`Source Excel sheets/`,
 PII reason. The pipeline scripts themselves (`stage1_classify.py`,
 `stage2_escalate.py`, `gemini_common.py`, `build_output.py`) are included, so
 the phase is reproducible given the source workbook.
+
+## Deploying to Vercel
+
+The repo ships a `vercel.json` and is laid out for Vercel's community PHP runtime.
+
+**Vercel project settings** — set **Root Directory** to `Education_Dropdown_MVP`.
+That is where `vercel.json` lives, and every path inside it is relative to it.
+Framework Preset: **Other**. No build command, no install step.
+
+Layout and why:
+
+| Path | Role on Vercel |
+| --- | --- |
+| `public/` | static site root (`outputDirectory`) — `index.html`, `app.js` |
+| `api/*.php` | serverless functions, mounted at `/api/*.php` |
+| `php/`, `data/` | bundled into each function via `includeFiles` |
+| `router.php` | **local dev only**, ignored by Vercel |
+
+The three endpoints live in `api/`, not `public/`, on purpose: anything under the
+static root is handed out verbatim, so `public/data.php` would have served its own
+PHP source as a text file. `public/app.js` therefore calls `/api/data.php`,
+`/api/generate.php` and `/api/search.php` — root-absolute, so the same URLs work
+in both environments. Locally, PHP's built-in server has a single document root
+and cannot see `../api`, which is the only thing `router.php` exists to bridge:
+
+```
+php -S localhost:8000 -t public router.php
+```
+
+### Optional environment variable
+
+`TRIAGE_GEMINI_API_KEY` — set it in Vercel's project settings to enable semantic
+escalation for ambiguous search queries. `GeminiTriageClient` reads `getenv()`
+before falling back to a local `.env`, so no code change is needed. Left unset,
+ambiguous queries return **"Not supported"** rather than a low-confidence guess.
+That is intended behaviour (see the two-state confidence design in
+`php/SearchEngine.php::evaluate()`).
+
+### What does NOT work on a deployment built from this repo alone
+
+`data/search_index.json` is gitignored (third-party PII — see **Files not in this
+repository** above), so Vercel never receives it. The support-triage **search card
+will report "Search unavailable"**; the dropdown comment generator is entirely
+unaffected. `SearchEngine` treats a missing index as empty rather than crashing,
+so this is a switched-off feature, not a 500. To enable search on a deployment,
+either commit the index to a **private** repo or supply it another way — but note
+it contains real candidate/institution data, so think about who can reach the
+deployment URL first.
+
+### Before you share the URL
+
+A Vercel deployment is reachable by anyone who has the link unless you enable
+Deployment Protection in project settings. This app exposes internal AuthBridge
+comment templates and dropdown wording via `/api/data.php`. That is not PII, but
+it is internal content — worth a deliberate decision rather than a default.

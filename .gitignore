@@ -28,3 +28,6 @@ PROGRESS_LOG.md
 prototype/
 # Historical copy of earlier work, nothing new goes here.
 Insuff Comments/
+
+# Vercel CLI local link
+.vercel/

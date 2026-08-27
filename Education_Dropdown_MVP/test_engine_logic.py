@@ -42,7 +42,7 @@ Older history retained below for context:
 REDESIGNED 2026-08-18 (Mandatory + Any-one-of, REPLACING the 2026-08-17
 GROUPS model entirely): the owner tested the GROUPS model live and found a
 real modeling bug, not a wording complaint. Given Mandatory-feeling docs
-{Degree, Consent form, Diploma/Certificate} plus a separate pick-one pool
+{Degree Certificate, Consent form, Diploma/Certificate} plus a separate pick-one pool
 {All year marksheets, Authbridge ARN, Application Form}, GROUPS rendered
 "submit any ONE of the following" - i.e. treated the two sets as complete
 ALTERNATIVES to each other. The owner's actual requirement was "submit ALL
@@ -311,7 +311,7 @@ def generate(inp):
             tags_in = inp.get("tags") or {}
             qual_levels = [v.strip() for v in (tags_in.get("QUALIFICATION_LEVEL") or []) if v and v.strip()]
             if not qual_levels:
-                return {"error": "Select at least one Qualification Level (UG/PG/Highest degree/etc.) when Course/Degree, Institute, and Year are all left blank."}
+                return {"error": "Select at least one Qualification Level (UG/PG/Highest degree/etc.) when Course/Degree Certificate, Institute, and Year are all left blank."}
             qual_phrases = [display_phrase("QUALIFICATION_LEVEL", v) for v in qual_levels]
             context = "the candidate's " + join_list(qual_phrases, "AND")
 
@@ -464,20 +464,20 @@ def generate(inp):
 TESTS = [
     ("Mandatory only, single document",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Mandatory only, two documents -> single Reason+Action lead-in sentence plus bare "
      "bullets, no header, no trailing conjunction (CORRECTED 2026-08-26, task #106 - mirrors "
      "the any-one-of-only fix; was a flowing 'both X and Y' sentence before this)",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree", "Final year marksheet"],
+      "mandatory_documents": ["Degree Certificate", "Final year marksheet"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Mandatory only, three documents -> same bulleted format (CORRECTED 2026-08-26, "
      "task #106; was a flowing 'all of X, Y, and Z' sentence before this)",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree", "Final year marksheet", "Provisional Certificate"],
+      "mandatory_documents": ["Degree Certificate", "Final year marksheet", "Provisional Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Any-one-of only, two documents -> single Reason+Action lead-in sentence "
@@ -485,38 +485,38 @@ TESTS = [
      "task #104 - supersedes the same-day headed/bulleted 'Additional Document' "
      "attempt the owner rejected)",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "any_one_of_documents": ["Degree", "Provisional Certificate"],
+      "any_one_of_documents": ["Degree Certificate", "Provisional Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("THE OWNER'S EXACT FLAGGED BUG: Mandatory set PLUS a separate Any-one-of pool "
      "(GROUPS wrongly rendered this as 'submit any ONE of two whole bundles')",
      {"template_id": "T9", "check_name": "Academic Reference Check",
-      "mandatory_documents": ["Degree", "Consent form", "Diploma/Certificate"],
+      "mandatory_documents": ["Degree Certificate", "Consent form", "Diploma/Certificate"],
       "any_one_of_documents": ["All year marksheets", "Authbridge ARN", "Application Form"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Combined Mandatory + Any-one-of, with special instructions appended",
      {"template_id": "T9", "check_name": "Academic Reference Check",
-      "mandatory_documents": ["Degree", "Final year marksheet"],
+      "mandatory_documents": ["Degree Certificate", "Final year marksheet"],
       "any_one_of_documents": ["Consent form", "Authbridge ARN", "HEDD consent form"],
       "special_instructions": ["Both sides", "Colour copy"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Combined, Any-one-of has exactly 1 doc -> no 'any ONE of' framing needed, just 'submit X'",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree", "Final year marksheet"],
+      "mandatory_documents": ["Degree Certificate", "Final year marksheet"],
       "any_one_of_documents": ["HEDD consent form"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Duplicate document within Mandatory rejected",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree", "Degree"],
+      "mandatory_documents": ["Degree Certificate", "Degree Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("Same document in both Mandatory and Any-one-of rejected (overlap)",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree"],
-      "any_one_of_documents": ["Degree", "Provisional Certificate"],
+      "mandatory_documents": ["Degree Certificate"],
+      "any_one_of_documents": ["Degree Certificate", "Provisional Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("No documents at all (both buckets empty) -> error",
@@ -527,20 +527,20 @@ TESTS = [
     ("Course/institute scoped (T9) with atomic document + special instruction + cleaned COURSE_NAME + year (Phase 2, updated)",
      {"template_id": "T9", "check_name": "Education Verification",
       "course_name": "Bachelor of Commerce (B.Com)", "vs": "Delhi University",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "special_instructions": ["Sealed and signed by the institution"],
       "tags": {"YEAR_FROM": "2015", "YEAR_TO": "2018"}}),
 
     ("Phase 2: single-year program collapses YEAR_FROM==YEAR_TO to one year, no dash",
      {"template_id": "T9", "check_name": "Education Verification",
       "course_name": "Master of Business Administration (MBA)", "vs": "IIM Calcutta",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"YEAR_FROM": "2022", "YEAR_TO": "2022"}}),
 
     ("Phase 2 (updated): missing YEAR_FROM/YEAR_TO on a course_vs template -> error, not a silently ambiguous comment",
      {"template_id": "T9", "check_name": "Education Verification",
       "course_name": "Bachelor of Commerce (B.Com)", "vs": "Delhi University",
-      "mandatory_documents": ["Degree"]}),
+      "mandatory_documents": ["Degree Certificate"]}),
 
     ("Phase 4: T69 Review Raised - mandatory REVIEW_REASON states a concrete why",
      {"template_id": "T69", "check_name": "Education Verification",
@@ -565,7 +565,7 @@ TESTS = [
     ("AUDIT FIX: T13 (course_vs, Wrong/Rejected) now uses CONTEXT (previously bypassed it) + multiselect VERIFICATION_BLOCKER",
      {"template_id": "T13", "check_name": "Education Verification",
       "course_name": "Bachelor of Technology (B.Tech)", "vs": "Anna University",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"YEAR_FROM": "2018", "YEAR_TO": "2022",
                "VERIFICATION_BLOCKER": ["Scanned copy is not clear / is cut off — needs a clear, uncut copy",
                                         "Signatures on document do not match across pages"]}}),
@@ -604,7 +604,7 @@ TESTS = [
 
     ("AUDIT FIX: T63 - no longer needs DOCUMENT_REQUIREMENTS (removed); Special Instructions optionally appended instead",
      {"template_id": "T63", "check_name": "Education Verification",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "special_instructions": ["Sealed and signed by the institution"],
       "tags": {"SOURCE_DOCUMENT": "Institute's academic register entry",
                "VERIFICATION_BLOCKER": ["Record could not be located / traced by the institute"],
@@ -622,14 +622,14 @@ TESTS = [
      "with course fields filled in, reproducing T64's exact old function]",
      {"template_id": "T63", "check_name": "Education Verification",
       "course_name": "Bachelor of Science (B.Sc)", "vs": "University of Mumbai",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"YEAR_FROM": "2017", "YEAR_TO": "2020",
                "SOURCE_DOCUMENT": "University's own convocation register",
                "VERIFICATION_BLOCKER": ["Institute is not recognized by the verifying body"]}}),
 
     ("RETIRED: T67 no longer exists - selecting it must error like any other unknown template_id",
      {"template_id": "T67", "check_name": "Education Verification",
-      "any_one_of_documents": ["Degree", "Provisional Certificate"]}),
+      "any_one_of_documents": ["Degree Certificate", "Provisional Certificate"]}),
 
     # --- 2026-08-18 (third fix, same day): Reason-label cleanup + T16/T38 retirement ---
 
@@ -651,7 +651,7 @@ TESTS = [
      "-> states the specific degree/institute instead of a vague 'Degree for Academic Reference Check'",
      {"template_id": "T9", "check_name": "Academic Reference Check",
       "course_name": "Bachelor of Technology (B.Tech)", "vs": "Anna University",
-      "mandatory_documents": ["Degree", "Final year marksheet"],
+      "mandatory_documents": ["Degree Certificate", "Final year marksheet"],
       "tags": {"YEAR_FROM": "2016", "YEAR_TO": "2020"}}),
 
     ("FOURTH FIX: T9 (course_vs_optional) with ALL course fields left blank -> falls back to check_name, "
@@ -659,36 +659,36 @@ TESTS = [
      "[SUPERSEDED 2026-08-26: silently falling back to check_name is no longer possible - see the two "
      "TASK #112 scenarios below for the corrected required-QUALIFICATION_LEVEL behavior]",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]}}),
 
     ("TASK #112: T9 (course_vs_optional) with ALL course fields left blank AND no QUALIFICATION_LEVEL "
      "-> rejected, not silently generic (owner: a fully untargeted comment should no longer go out "
      "when nothing identifies which of a candidate's real degrees is meant)",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree"]}),
+      "mandatory_documents": ["Degree Certificate"]}),
 
     ("TASK #112: T9 (course_vs_optional) with ALL course fields left blank but QUALIFICATION_LEVEL "
      "given (multiselect - two values) -> context states the candidate's qualification level(s) instead "
      "of falling back to the generic check_name phrase",
      {"template_id": "T9", "check_name": "Professional License Check",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"QUALIFICATION_LEVEL": ["UG", "Highest degree"]}}),
 
     ("FOURTH FIX: T9 (course_vs_optional) - course_name given but vs blank -> rejected, not silently dropped",
      {"template_id": "T9", "check_name": "Academic Reference Check",
       "course_name": "Bachelor of Technology (B.Tech)",
-      "mandatory_documents": ["Degree"]}),
+      "mandatory_documents": ["Degree Certificate"]}),
 
     ("FOURTH FIX: T9 (course_vs_optional) - course_name+vs given but YEAR_FROM/YEAR_TO blank -> rejected",
      {"template_id": "T9", "check_name": "Academic Reference Check",
       "course_name": "Bachelor of Technology (B.Tech)", "vs": "Anna University",
-      "mandatory_documents": ["Degree"]}),
+      "mandatory_documents": ["Degree Certificate"]}),
 
     ("FOURTH FIX: T13 (course_vs_optional, Wrong/Rejected) with course info -> full CONTEXT",
      {"template_id": "T13", "check_name": "Education Verification",
       "course_name": "Bachelor of Commerce (B.Com)", "vs": "Delhi University",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"YEAR_FROM": "2015", "YEAR_TO": "2018",
                "VERIFICATION_BLOCKER": ["Signatures on document do not match across pages"]}}),
 
@@ -696,27 +696,27 @@ TESTS = [
      "uses CONTEXT correctly (T63's optimized_text was fixed from a literal CHECK_NAME during this merge)",
      {"template_id": "T63", "check_name": "Education Verification",
       "course_name": "Bachelor of Science (B.Sc)", "vs": "University of Mumbai",
-      "mandatory_documents": ["Degree"],
+      "mandatory_documents": ["Degree Certificate"],
       "tags": {"YEAR_FROM": "2017", "YEAR_TO": "2020",
                "SOURCE_DOCUMENT": "University's own convocation register",
                "VERIFICATION_BLOCKER": ["Institute is not recognized by the verifying body"]}}),
 
     ("RETIRED (fourth fix): T37 no longer exists - merged into T9",
-     {"template_id": "T37", "check_name": "Education Verification", "mandatory_documents": ["Degree"]}),
+     {"template_id": "T37", "check_name": "Education Verification", "mandatory_documents": ["Degree Certificate"]}),
     ("RETIRED (fourth fix): T40 no longer exists - merged into T14",
      {"template_id": "T40", "check_name": "Education Verification", "tags": {"ANTECEDENTS": ["CGPA"]}}),
     ("RETIRED (fourth fix): T41 no longer exists - merged into T15",
      {"template_id": "T41", "check_name": "Education Verification"}),
     ("RETIRED (fourth fix): T45 no longer exists - merged into T10",
-     {"template_id": "T45", "check_name": "Education Verification", "mandatory_documents": ["Degree"]}),
+     {"template_id": "T45", "check_name": "Education Verification", "mandatory_documents": ["Degree Certificate"]}),
     ("RETIRED (fourth fix): T46 no longer exists - merged into T11",
-     {"template_id": "T46", "check_name": "Education Verification", "mandatory_documents": ["Degree"]}),
+     {"template_id": "T46", "check_name": "Education Verification", "mandatory_documents": ["Degree Certificate"]}),
     ("RETIRED (fourth fix): T47 no longer exists - merged into T12",
-     {"template_id": "T47", "check_name": "Education Verification", "mandatory_documents": ["Degree"]}),
+     {"template_id": "T47", "check_name": "Education Verification", "mandatory_documents": ["Degree Certificate"]}),
     ("RETIRED (fourth fix): T57 no longer exists - merged into T13",
-     {"template_id": "T57", "check_name": "Education Verification", "mandatory_documents": ["Degree"]}),
+     {"template_id": "T57", "check_name": "Education Verification", "mandatory_documents": ["Degree Certificate"]}),
     ("RETIRED (fourth fix): T64 no longer exists - merged into T63",
-     {"template_id": "T64", "check_name": "Education Verification", "mandatory_documents": ["Degree"]}),
+     {"template_id": "T64", "check_name": "Education Verification", "mandatory_documents": ["Degree Certificate"]}),
 
     # --- 2026-08-19 (fifth pass): full-template tag audit ---
 
@@ -791,7 +791,7 @@ bug_result = generate(bug_input)
 expected_bug = (
     "Kindly submit the following documents for the candidate's highest completed degree:\n\n"
     "Mandatory (All 3 required):\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Consent form\n"
     "* Diploma/Certificate\n\n"
     "Additional Document (Submit ANY ONE of the following):\n"
@@ -807,7 +807,7 @@ assert bug_result["final_comment"] == expected_bug, "Mandatory+Any-one-of render
 print("PASS: Mandatory set and Any-one-of pool are now rendered as a headed, bulleted layout, not a single flowing sentence.")
 
 # Any-one-of-only, 2 documents, no Mandatory at all - owner live-tested this
-# exact shape ("The case is missing either Degree or Highest Passing
+# exact shape ("The case is missing either Degree Certificate or Highest Passing
 # Education Marksheet for...") and asked why it wasn't using "our agreed
 # format" the way the combined Mandatory+Any-one-of case already did.
 # ROUND 1 (2026-08-26): needs_combined_document_sentence()/
@@ -827,7 +827,7 @@ any_only_input = by_desc["Any-one-of only, two documents -> single Reason+Action
 any_only_result = generate(any_only_input)
 expected_any_only = (
     "To proceed with the verification for the candidate's highest completed degree, please provide any ONE of the following missing documents:\n\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Provisional Certificate"
 )
 assert any_only_result["final_comment"] == expected_any_only, any_only_result["final_comment"]
@@ -851,7 +851,7 @@ combined_si_result = generate(combined_si_input)
 expected_combined_si = (
     "Kindly submit the following documents for the candidate's highest completed degree:\n\n"
     "Mandatory (Both required):\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Final year marksheet\n\n"
     "Additional Document (Submit ANY ONE of the following):\n"
     "* Consent form\n"
@@ -956,7 +956,7 @@ print("PASS: T71 (Antecedent Value Less Than) renders as a plain, readable sente
 t13_result = generate(by_desc["AUDIT FIX: T13 (course_vs, Wrong/Rejected) now uses CONTEXT (previously bypassed it) + multiselect VERIFICATION_BLOCKER"])
 assert "error" not in t13_result, t13_result
 assert t13_result["final_comment"] == (
-    "The copy of Degree submitted for Bachelor of Technology (B.Tech) from Anna University (2018–2022) cannot be accepted "
+    "The copy of Degree Certificate submitted for Bachelor of Technology (B.Tech) from Anna University (2018–2022) cannot be accepted "
     "because Scanned copy is not clear / is cut off — needs a clear, uncut copy and Signatures on document do not match across pages. "
     "Kindly provide an acceptable copy."
 ), t13_result["final_comment"]
@@ -1018,7 +1018,7 @@ t63_result = generate(by_desc["AUDIT FIX: T63 - no longer needs DOCUMENT_REQUIRE
 assert "error" not in t63_result, t63_result
 assert t63_result["final_comment"] == (
     "The Institute's academic register entry submitted for the candidate's highest completed degree cannot be accepted because "
-    "Record could not be located / traced by the institute. Kindly provide Degree. "
+    "Record could not be located / traced by the institute. Kindly provide Degree Certificate. "
     "Please ensure the copy is: Sealed and signed by the institution."
 ), t63_result["final_comment"]
 print("PASS: T63 no longer requires the dead DOCUMENT_REQUIREMENTS tag and uses the standard Special Instructions mechanism instead.")
@@ -1040,7 +1040,7 @@ t64_result = generate(by_desc["NEW: T64 - course_vs counterpart of T63, SOURCE_D
 assert "error" not in t64_result, t64_result
 assert t64_result["final_comment"] == (
     "The University's own convocation register submitted for Bachelor of Science (B.Sc) from University of Mumbai (2017–2020) "
-    "cannot be accepted because Institute is not recognized by the verifying body. Kindly provide Degree."
+    "cannot be accepted because Institute is not recognized by the verifying body. Kindly provide Degree Certificate."
 ), t64_result["final_comment"]
 print("PASS: T64 (new template) correctly renders a course/institute-scoped source-document rejection.")
 
@@ -1072,7 +1072,7 @@ print("GOT:\n", owner_gap_result["final_comment"])
 assert owner_gap_result["final_comment"] == (
     "To proceed with the verification for Bachelor of Technology (B.Tech) from Anna University (2016–2020), "
     "please provide the following missing documents:\n\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Final year marksheet"
 ), owner_gap_result["final_comment"]
 assert "Academic Reference Check" not in owner_gap_result["final_comment"], owner_gap_result["final_comment"]
@@ -1087,7 +1087,7 @@ blank_course_result = generate(by_desc["FOURTH FIX: T9 (course_vs_optional) with
                                         "TASK #112 scenarios below for the corrected required-QUALIFICATION_LEVEL behavior]"])
 assert "error" not in blank_course_result, blank_course_result
 assert blank_course_result["final_comment"] == (
-    "To complete the verification for the candidate's highest completed degree, please provide the Degree."
+    "To complete the verification for the candidate's highest completed degree, please provide the Degree Certificate."
 ), blank_course_result["final_comment"]
 print("PASS: T9 with course info genuinely blank now states the picked Qualification Level instead of a bare check_name fallback - see TASK #112 below for the full before/after.")
 
@@ -1108,7 +1108,7 @@ qual_given_result = generate(by_desc["TASK #112: T9 (course_vs_optional) with AL
                                       "of falling back to the generic check_name phrase"])
 assert "error" not in qual_given_result, qual_given_result
 assert qual_given_result["final_comment"] == (
-    "To complete the verification for the candidate's Undergraduate (UG) qualification and highest completed degree, please provide the Degree."
+    "To complete the verification for the candidate's Undergraduate (UG) qualification and highest completed degree, please provide the Degree Certificate."
 ), qual_given_result["final_comment"]
 print("PASS: multiple Qualification Level values are AND-joined correctly into the CONTEXT phrase (multiselect, per owner's explicit clarification).")
 
@@ -1130,7 +1130,7 @@ t63_merged_result = generate(by_desc["FOURTH FIX: T63 (course_vs_optional, Wrong
 assert "error" not in t63_merged_result, t63_merged_result
 assert t63_merged_result["final_comment"] == (
     "The University's own convocation register submitted for Bachelor of Science (B.Sc) from University of Mumbai (2017–2020) "
-    "cannot be accepted because Institute is not recognized by the verifying body. Kindly provide Degree."
+    "cannot be accepted because Institute is not recognized by the verifying body. Kindly provide Degree Certificate."
 ), t63_merged_result["final_comment"]
 print("PASS: T63 (merged with retired T64) correctly uses CONTEXT after the literal-CHECK_NAME text bug was fixed during the merge.")
 
@@ -1308,12 +1308,12 @@ print("PASS: new template T74 (Document/Blurred-Illegible - Specific Defect) sta
 # silently vanish (the precedence bug this fix specifically guards against).
 t74_combined_result = generate({
     "template_id": "T74", "check_name": "Education Verification",
-    "mandatory_documents": ["Degree"], "any_one_of_documents": ["Provisional Certificate"],
+    "mandatory_documents": ["Degree Certificate"], "any_one_of_documents": ["Provisional Certificate"],
     "tags": {"BLUR_DETAIL": ["Entire copy is blurred or unreadable"]},
 })
 assert "error" not in t74_combined_result, t74_combined_result
 assert t74_combined_result["final_comment"] == (
-    "The copy of Degree submitted for Education Verification could not be read clearly. Kindly resubmit a clear, "
+    "The copy of Degree Certificate submitted for Education Verification could not be read clearly. Kindly resubmit a clear, "
     "complete copy addressing the following:\n\n"
     "* Entire copy is blurred or unreadable"
 ), t74_combined_result["final_comment"]
@@ -1341,7 +1341,7 @@ print("PASS: T66 still renders correctly after being reclassified from Document/
 # T63 normalized from "Wrong/Rejected - Institution's Own Record" to plain "Wrong/Rejected"
 t63_norm_result = generate({
     "template_id": "T63", "check_name": "Education Verification",
-    "mandatory_documents": ["Degree"],
+    "mandatory_documents": ["Degree Certificate"],
     "tags": {"SOURCE_DOCUMENT": "Institute's academic register entry",
              "VERIFICATION_BLOCKER": ["Record could not be located / traced by the institute"],
              "QUALIFICATION_LEVEL": ["Highest degree"]},
@@ -1380,14 +1380,14 @@ print("mandatory_only_sentence() instead of inline template substitution):")
 # further up this file, still valid).
 t13_multi_result = generate({
     "template_id": "T13", "check_name": "Education Verification",
-    "mandatory_documents": ["Degree", "Provisional Certificate"],
+    "mandatory_documents": ["Degree Certificate", "Provisional Certificate"],
     "tags": {"VERIFICATION_BLOCKER": ["Scanned copy is not clear / is cut off — needs a clear, uncut copy"],
              "QUALIFICATION_LEVEL": ["Highest degree"]},
 })
 assert "error" not in t13_multi_result, t13_multi_result
 assert t13_multi_result["final_comment"] == (
     "To proceed with the verification for the candidate's highest completed degree, please provide acceptable copies of the following documents:\n\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Provisional Certificate"
 ), t13_multi_result["final_comment"]
 assert "The both" not in t13_multi_result["final_comment"], t13_multi_result["final_comment"]
@@ -1395,13 +1395,13 @@ print("PASS: T13 with 2 mandatory documents now renders via the bulleted mandato
 
 t12_multi_result = generate({
     "template_id": "T12", "check_name": "Education Verification",
-    "mandatory_documents": ["Degree", "Provisional Certificate", "Final year marksheet"],
+    "mandatory_documents": ["Degree Certificate", "Provisional Certificate", "Final year marksheet"],
     "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]},
 })
 assert "error" not in t12_multi_result, t12_multi_result
 assert t12_multi_result["final_comment"] == (
     "To proceed with the verification for the candidate's highest completed degree, please provide valid, current copies of the following documents:\n\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Provisional Certificate\n"
     "* Final year marksheet"
 ), t12_multi_result["final_comment"]
@@ -1410,13 +1410,13 @@ print("PASS: T12 with 3 mandatory documents now renders via the bulleted mandato
 
 t68_multi_result = generate({
     "template_id": "T68", "check_name": "Education Verification",
-    "mandatory_documents": ["Degree", "Provisional Certificate"],
+    "mandatory_documents": ["Degree Certificate", "Provisional Certificate"],
     "tags": {"VALIDITY_PERIOD": "6 months"},
 })
 assert "error" not in t68_multi_result, t68_multi_result
 assert t68_multi_result["final_comment"] == (
     "To proceed with the verification for Education Verification, please provide valid, current copies of the following documents:\n\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Provisional Certificate"
 ), t68_multi_result["final_comment"]
 print("PASS: T68 with 2 mandatory documents also now renders via the bulleted mandatory-only format.")
@@ -1464,12 +1464,12 @@ print("PASS: the owner's exact reported mandatory-only case now matches the targ
 # know Case and all").
 t9_single_result = generate({
     "template_id": "T9", "check_name": "Professional License Check",
-    "mandatory_documents": ["Degree"],
+    "mandatory_documents": ["Degree Certificate"],
     "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]},
 })
 assert "error" not in t9_single_result, t9_single_result
 assert t9_single_result["final_comment"] == (
-    "To complete the verification for the candidate's highest completed degree, please provide the Degree."
+    "To complete the verification for the candidate's highest completed degree, please provide the Degree Certificate."
 ), t9_single_result["final_comment"]
 assert "case" not in t9_single_result["final_comment"].lower(), t9_single_result["final_comment"]
 print("PASS: a single mandatory document still renders as a plain inline sentence (no bullet, no real list), "
@@ -1516,12 +1516,12 @@ t9_course_result = generate({
     "template_id": "T9", "check_name": "Academic Reference Check",
     "course_name": "Bachelor of Technology (B.Tech)", "vs": "Delhi University",
     "tags": {"YEAR_FROM": "2022", "YEAR_TO": "2026"},
-    "mandatory_documents": ["Degree"],
+    "mandatory_documents": ["Degree Certificate"],
 })
 assert "error" not in t9_course_result, t9_course_result
 assert t9_course_result["final_comment"] == (
     "To complete the verification for Bachelor of Technology (B.Tech) from Delhi University (2022–2026), "
-    "please provide the Degree."
+    "please provide the Degree Certificate."
 ), t9_course_result["final_comment"]
 print("PASS: course_vs_optional with course/institute filled in still states the real course/institute - unaffected by the CHECK_NAME fix (different tag, different purpose).")
 
@@ -1554,14 +1554,14 @@ print("PASS: the owner's exact reported case now matches the target format exact
 # the Document Requirements block must still appear as its own trailing section.
 t9_task109_multi_result = generate({
     "template_id": "T9", "check_name": "Professional License Check",
-    "mandatory_documents": ["Degree", "Final year marksheet"],
+    "mandatory_documents": ["Degree Certificate", "Final year marksheet"],
     "special_instructions": ["Both sides, colour copy"],
     "tags": {"QUALIFICATION_LEVEL": ["Highest degree"]},
 })
 assert "error" not in t9_task109_multi_result, t9_task109_multi_result
 assert t9_task109_multi_result["final_comment"] == (
     "To proceed with the verification for the candidate's highest completed degree, please provide the following missing documents:\n\n"
-    "* Degree\n"
+    "* Degree Certificate\n"
     "* Final year marksheet\n\n"
     "Document Requirements:\n"
     "* Must be a colour copy showing both sides of the document."
@@ -1573,7 +1573,7 @@ print("PASS: 2+ mandatory documents (task #106's bulleted override) plus Special
 # header, per the owner's explicit "Just T9 (Missing) for now" scope answer.
 t13_unaffected_result = generate({
     "template_id": "T13", "check_name": "Education Verification",
-    "mandatory_documents": ["Degree"],
+    "mandatory_documents": ["Degree Certificate"],
     "tags": {"VERIFICATION_BLOCKER": "Document appears to be tampered or altered",
              "QUALIFICATION_LEVEL": ["Highest degree"]},
     "special_instructions": ["Sealed and signed by the institution"],
