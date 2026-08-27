@@ -29,9 +29,52 @@ function docApplies(tagMeta, doc) {
 
 const $ = (id) => document.getElementById(id);
 
+// Renders a bootstrap failure into the page itself. Nothing else on the page
+// works when this fires, so it goes at the top of <body> and says what to do.
+function bootFailed(what, detail) {
+  const box = document.createElement('div');
+  box.className = 'card';
+  box.style.cssText = 'border:2px solid #b42318; background:#fef3f2;';
+  box.innerHTML = `<h2 style="margin:0 0 8px; color:#b42318; font-size:16px;">The app could not load its dropdown data</h2>`
+    + `<p style="margin:0 0 8px;">${escapeHtml(what)} None of the dropdowns can be filled in until this is fixed.</p>`
+    + `<pre style="margin:0; white-space:pre-wrap; font-size:12px; color:#475467;">${escapeHtml(detail || '')}</pre>`;
+  document.body.insertBefore(box, document.body.firstChild);
+  console.error('[boot]', what, detail);
+}
+
 async function boot() {
-  const res = await fetch('/api/data.php');
-  DATA = await res.json();
+  // Added 2026-08-27 (task #117): this used to be a bare
+  // `DATA = await (await fetch(...)).json()`. Every dropdown on the page is
+  // populated from DATA below, so ANY bootstrap failure left the whole UI
+  // silently empty - no error, no console hint the user would think to open,
+  // just dead Check Type and Category selects. The reported case was PHP's
+  // built-in server without router.php: it answers an unmatched /api/data.php
+  // with index.html and HTTP 200, so res.ok is true and .json() throws on
+  // "<!DOCTYPE" - the single most confusing possible failure. Surface it.
+  let res;
+  try {
+    res = await fetch('/api/data.php');
+  } catch (e) {
+    return bootFailed('Could not reach /api/data.php at all.', e.message);
+  }
+  const body = await res.text();
+  if (!res.ok) {
+    return bootFailed(`/api/data.php returned HTTP ${res.status}.`, body.slice(0, 200));
+  }
+  try {
+    DATA = JSON.parse(body);
+  } catch (e) {
+    // Overwhelmingly the "served index.html instead of the endpoint" case.
+    const looksLikeHtml = body.trimStart().startsWith('<');
+    return bootFailed(
+      looksLikeHtml
+        ? '/api/data.php returned HTML instead of JSON, which means the request never reached the PHP endpoint.'
+        : '/api/data.php returned something that is not valid JSON.',
+      looksLikeHtml
+        ? 'If you are running locally, the server needs the router: php -S localhost:8000 -t public router.php  (or just run start-server.ps1). Without the router argument, the PHP built-in server serves index.html for /api/* and every dropdown stays empty. On Vercel, check that Root Directory is set to Education_Dropdown_MVP and that the PHP runtime in vercel.json built successfully.'
+        : body.slice(0, 200)
+    );
+  }
 
   // Header check-name simulator
   const checkSel = $('checkName');
@@ -777,4 +820,4 @@ function renderVerdict(data) {
   </div>`;
 }
 
-boot();
+boot().catch(e => bootFailed('Unexpected error while starting up.', e && e.message));
