@@ -1,0 +1,11 @@
+# Local-development-only shims. public/api/*.php exist so that a plain
+# `php -S localhost:8000 -t public` can reach the endpoints without the
+# router.php argument. They must NOT be uploaded to Vercel: public/ is the
+# static output root there, so an uploaded public/api/data.php would be served
+# as a static file at /api/data.php and shadow the real serverless function
+# built from api/data.php.
+public/api/
+
+# Never deploy local env files or the Python test suite / build scripts.
+.env
+*.py

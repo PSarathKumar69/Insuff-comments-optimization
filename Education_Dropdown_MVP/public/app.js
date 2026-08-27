@@ -87,7 +87,7 @@ async function boot() {
         ? facts + '\n\nSomething answered with the page itself instead of running the PHP endpoint. Whatever is serving this URL either cannot execute PHP, or falls back to index.html for paths it does not recognise. Common causes:\n'
           + '  - VS Code Live Server / http-server / any static file server: these cannot run PHP at all.\n'
           + '  - Opening public/index.html directly from disk (file:// or a static preview).\n'
-          + '  - php -S localhost:8000 -t public  WITHOUT the router.php argument (use start-server.ps1).\n'
+          + '  - php -S started from the wrong folder, so it never found public/ or api/ (run start-server.ps1, which checks).\n'
           + '  - A deployment whose PHP functions did not build.\n'
           + 'The "Page URL" line above says which of these it is.'
         : facts

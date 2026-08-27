@@ -12,7 +12,7 @@
 3. Open a terminal in VS Code (`` Ctrl+` ``), make sure you're in *this*
    folder, then run:
    ```
-   php -S localhost:8000 -t public router.php
+   php -S localhost:8000 -t public
    ```
 4. Open `http://localhost:8000` in your browser. You'll see the full
    dropdown builder: category → reason → detail fields → live generated
@@ -126,11 +126,24 @@ static root is handed out verbatim, so `public/data.php` would have served its o
 PHP source as a text file. `public/app.js` therefore calls `/api/data.php`,
 `/api/generate.php` and `/api/search.php` — root-absolute, so the same URLs work
 in both environments. Locally, PHP's built-in server has a single document root
-and cannot see `../api`, which is the only thing `router.php` exists to bridge:
+and cannot see `../api`. Two things bridge that, and either alone is enough:
+
+- **`public/api/*.php`** — three one-line shims that `require` the real endpoint.
+  `.vercelignore` excludes `public/api/` from the deployment, so on Vercel the same
+  URL is served by the real serverless function and these are never uploaded (an
+  uploaded copy would sit in the static root and shadow the function).
+- **`router.php`** — maps `/api/*.php` for the built-in server, and 404s any other
+  unresolved `*.php` instead of letting it fall through to `index.html`.
+
+So both of these work:
 
 ```
-php -S localhost:8000 -t public router.php
+php -S localhost:8000 -t public              # via the shims
+php -S localhost:8000 -t public router.php   # via the router (also gives honest 404s)
 ```
+
+`start-server.ps1` uses the second and additionally kills a stale server on port
+8000 and validates the layout, so prefer it.
 
 ### Optional environment variable
 
