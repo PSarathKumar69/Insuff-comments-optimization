@@ -58,8 +58,21 @@ async function boot() {
     return bootFailed('Could not reach /api/data.php at all.', e.message);
   }
   const body = await res.text();
+  // Added 2026-08-27 (task #120): always report WHERE the page is running and WHAT
+  // came back. The previous message asserted a likely cause (a local server without
+  // router.php) without evidence for it, which sent debugging down the wrong path
+  // repeatedly - a page served by any tool with an index.html fallback (VS Code
+  // Live Server, http-server, a misconfigured deployment) produces the identical
+  // symptom. These five lines identify the environment unambiguously.
+  const facts = [
+    'Page URL:      ' + location.href,
+    'Requested:     ' + new URL('/api/data.php', location.href).href,
+    'HTTP status:   ' + res.status + ' ' + (res.statusText || ''),
+    'Content-Type:  ' + (res.headers.get('content-type') || '(none)'),
+    'Body starts:   ' + JSON.stringify(body.slice(0, 120)),
+  ].join('\n');
   if (!res.ok) {
-    return bootFailed(`/api/data.php returned HTTP ${res.status}.`, body.slice(0, 200));
+    return bootFailed(`/api/data.php returned HTTP ${res.status}.`, facts);
   }
   try {
     DATA = JSON.parse(body);
@@ -71,8 +84,13 @@ async function boot() {
         ? '/api/data.php returned HTML instead of JSON, which means the request never reached the PHP endpoint.'
         : '/api/data.php returned something that is not valid JSON.',
       looksLikeHtml
-        ? 'If you are running locally, the server needs the router: php -S localhost:8000 -t public router.php  (or just run start-server.ps1). Without the router argument, the PHP built-in server serves index.html for /api/* and every dropdown stays empty. On Vercel, check that Root Directory is set to Education_Dropdown_MVP and that the PHP runtime in vercel.json built successfully.'
-        : body.slice(0, 200)
+        ? facts + '\n\nSomething answered with the page itself instead of running the PHP endpoint. Whatever is serving this URL either cannot execute PHP, or falls back to index.html for paths it does not recognise. Common causes:\n'
+          + '  - VS Code Live Server / http-server / any static file server: these cannot run PHP at all.\n'
+          + '  - Opening public/index.html directly from disk (file:// or a static preview).\n'
+          + '  - php -S localhost:8000 -t public  WITHOUT the router.php argument (use start-server.ps1).\n'
+          + '  - A deployment whose PHP functions did not build.\n'
+          + 'The "Page URL" line above says which of these it is.'
+        : facts
     );
   }
 
